@@ -35,11 +35,11 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpCoreContext;
 import org.apache.http.protocol.HttpProcessor;
-import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.protocol.RequestContent;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -118,7 +118,7 @@ public class TestAHC {
 				.keyId("MyId").build();
 		HttpProcessor httpProcessor = createProcessor(httpSignature);
 		
-		HttpCoreContext context = HttpCoreContext.create();
+		HttpContext context = new BasicHttpContext();
 		HttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("GET", "/");
 		request.setEntity(new StringEntity("Hello World!"));
 		httpProcessor.process(request, context);
@@ -134,13 +134,11 @@ public class TestAHC {
 	}
 
 	private HttpProcessor createProcessor(HttpSignature httpSignature) throws NoSuchAlgorithmException, InvalidKeyException {
-		HttpProcessor httpProcessor = HttpProcessorBuilder.create()
-				.add(new RequestContent())
-				.add(new RequestFixedDate())
-				.add(new RequestDigest(MessageDigest.getInstance("SHA-256")))
-				//.add(new RequestTargetHost())
-				.add(new HttpRequestSignatureInterceptor(httpSignature))
-				.build();
+		BasicHttpProcessor httpProcessor = new BasicHttpProcessor();
+		httpProcessor.addInterceptor(new RequestContent());
+		httpProcessor.addInterceptor(new RequestFixedDate());
+		httpProcessor.addInterceptor(new RequestDigest(MessageDigest.getInstance("SHA-256")));
+		httpProcessor.addInterceptor(new HttpRequestSignatureInterceptor(httpSignature));
 		return httpProcessor;
 	}
 }

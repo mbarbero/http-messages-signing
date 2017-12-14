@@ -49,7 +49,7 @@ abstract class HttpSignatureHeaderElements {
 		abstract HttpSignatureHeaderElements build();
 		
 		Builder parse(String header) {
-			HeaderElement[] elements = BasicHeaderValueParser.parseElements(header, BasicHeaderValueParser.INSTANCE);
+			HeaderElement[] elements = BasicHeaderValueParser.parseElements(header, BasicHeaderValueParser.DEFAULT);
 			for (HeaderElement element : elements) {
 				String value = element.getValue();
 				switch(element.getName()) {
