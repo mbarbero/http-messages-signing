@@ -8,7 +8,11 @@ Java Implementation of the IETF draft for https://tools.ietf.org/html/draft-cava
 
 Bridges with the following HTTP libraries are planned shortly:
 
-* http://square.github.io/okhttp/[OkHTTP 3.x]
+* http://square.github.io/okhttp/[OkHttp 3.x]
+
+== Requirements
+
+Java 8
 
 == Build
 
