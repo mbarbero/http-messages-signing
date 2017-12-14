@@ -1,0 +1,4 @@
+-exportcontents: \
+	tech.barbero.httpsignatures
+-sources: true
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
