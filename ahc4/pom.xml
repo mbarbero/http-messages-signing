@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>http-messages-signing-ahc4</artifactId>
-	<name>HTTP Messages Signing - Apache HTTP Component 4.x bridge</name>
+	<name>HTTP Messages Signing - Apache HTTP Components 4.x bridge</name>
 
 	<dependencies>
 		<dependency>

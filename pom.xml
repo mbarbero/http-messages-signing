@@ -10,7 +10,7 @@
 
 	<modules>
 		<module>core</module>
-		<module>htc4</module>
+		<module>ahc4</module>
 	</modules>
 
 	<properties>
