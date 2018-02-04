@@ -20,7 +20,7 @@ import org.apache.http.message.BasicHeaderValueParser;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-abstract class HttpSignatureHeaderElements {
+public abstract class HttpSignatureHeaderElements {
 
 	HttpSignatureHeaderElements() {}
 	
@@ -28,7 +28,7 @@ abstract class HttpSignatureHeaderElements {
 	public abstract String algorithm();
 	public abstract List<String> headers();
 	public abstract String signature();
-		
+
 	public static HttpSignatureHeaderElements fromHeadersList(List<String> headers) {
 		Builder builder = HttpSignatureHeaderElements.builder();
 		headers.forEach(header -> builder.parse(header));
