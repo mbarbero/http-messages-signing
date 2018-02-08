@@ -18,13 +18,13 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
 
-import tech.barbero.httpsignatures.HttpSignature;
+import tech.barbero.httpsignatures.HttpMessageSigner;
 
-public final class HttpRequestSignatureInterceptor implements HttpRequestInterceptor {
+public final class HttpRequestSignerInterceptor implements HttpRequestInterceptor {
 
-	private final HttpSignature httpSignature;
+	private final HttpMessageSigner httpSignature;
 
-	public HttpRequestSignatureInterceptor(HttpSignature httpSignature) {
+	public HttpRequestSignerInterceptor(HttpMessageSigner httpSignature) {
 		this.httpSignature = httpSignature;
 	}
 	

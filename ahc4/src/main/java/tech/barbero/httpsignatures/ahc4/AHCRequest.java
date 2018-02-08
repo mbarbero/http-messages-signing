@@ -12,28 +12,33 @@ package tech.barbero.httpsignatures.ahc4;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import org.apache.http.HttpRequest;
+import tech.barbero.httpsignatures.HttpRequest;
 
-import tech.barbero.httpsignatures.HttpSignature.Request;
+public class AHCRequest extends AHCMessage implements HttpRequest {
 
-class AHCRequest<HR extends HttpRequest> implements Request<AHCRequest<HR>> {
-
-	private final HR delegate;
+	private final org.apache.http.HttpRequest delegate;
 	
-	private AHCRequest(HR request) {
+	private AHCRequest(org.apache.http.HttpRequest request) {
 		this.delegate = request;
 	}
-	
-	public static <HR extends HttpRequest> AHCRequest<HR> from(HR request) {
-		return new AHCRequest<>(request);
-	}
-	
-	public HR delegate() {
+
+	@Override
+	public org.apache.http.HttpRequest delegate() {
 		return delegate;
+	}
+
+	public static AHCRequest from(org.apache.http.HttpRequest request) {
+		if (request instanceof AHCRequest) {
+			return (AHCRequest) request;
+		}
+		return new AHCRequest(request);
+	}
+
+	@Override
+	public AHCRequest addHeader(String name, String value) {
+		super.addHeader(name, value);
+		return this;
 	}
 	
 	@Override
@@ -50,19 +55,5 @@ class AHCRequest<HR extends HttpRequest> implements Request<AHCRequest<HR>> {
 		}
 	}
 
-	@Override
-	public List<String> headerValues(String name) {
-		if (name == null || name.isEmpty()) {
-			throw new IllegalArgumentException("Argument 'name' must not be null of empty");
-		}
-		return Arrays.stream(delegate().getHeaders(name))
-			.map(h -> h.getValue())
-			.collect(Collectors.toList());
-	}
-	
-	@Override
-	public AHCRequest<HR> addHeader(String name, String value) {
-		delegate().addHeader(name, value);
-		return this;
-	}
+
 }

@@ -8,26 +8,15 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures;
+package tech.barbero.httpsignatures.ahc4;
 
-import java.util.Iterator;
-import java.util.function.Function;
+import tech.barbero.httpsignatures.MessageFactory;
+import tech.barbero.httpsignatures.TestHttpMessageVerifier;
 
-final class Utils {
+public class TestAHCMessageVerifier extends TestHttpMessageVerifier {
 
-	private Utils() {
-		// prevent instantiation
-	}
-	
-	static String join(Iterator<String> it, String separator, Function<String, String> f) {
-		StringBuilder sb = new StringBuilder();
-		if (it.hasNext()) {
-			sb.append(f.apply(it.next()));
-			while (it.hasNext()) {
-				sb.append(separator);
-				sb.append(f.apply(it.next()));
-			}
-		}
-		return sb.toString();
+	@Override
+	protected MessageFactory createFactory() {
+		return new AHCMessageFactory();
 	}
 }

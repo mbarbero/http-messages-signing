@@ -10,31 +10,23 @@
  *******************************************************************************/
 package tech.barbero.httpsignatures;
 
-import java.net.URI;
+class ResponseMock extends MessageMock implements HttpResponse {
 
-class RequestMock extends MessageMock implements HttpRequest {
+	private final int statusCode;
 
-	private final String method;
-	private final URI uri;
-
-	RequestMock(String method, URI uri) {
-		this.method = method;
-		this.uri = uri;
+	ResponseMock(int statusCode) {
+		this.statusCode = statusCode;
 	}
 	
 	@Override
-	public HttpRequest addHeader(String name, String value) {
+	public HttpResponse addHeader(String name, String value) {
 		super.addHeader(name, value);
 		return this;
 	}
 	
 	@Override
-	public String method() {
-		return method;
+	public int statusCode() {
+		return statusCode;
 	}
 
-	@Override
-	public URI uri() {
-		return uri;
-	}
 }

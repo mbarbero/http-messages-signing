@@ -11,6 +11,42 @@
 	<artifactId>http-messages-signing-core</artifactId>
 	<name>HTTP Messages Signing Core</name>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<minimizeJar>true</minimizeJar>
+					<artifactSet>
+						<includes>
+							<include>org.apache.httpcomponents:httpcore</include>
+							<include>com.google.guava:guava</include>
+						</includes>
+					</artifactSet>
+					<relocations>
+						<relocation>
+							<pattern>org.apache.http</pattern>
+							<shadedPattern>_shaded.org.apache.http</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.google.common</pattern>
+							<shadedPattern>_shaded.com.google.common</shadedPattern>
+						</relocation>
+					</relocations>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.auto.value</groupId>
@@ -19,11 +55,14 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 	</dependencies>
 </project>
