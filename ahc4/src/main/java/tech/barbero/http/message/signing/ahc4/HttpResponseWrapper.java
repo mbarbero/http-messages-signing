@@ -1,0 +1,37 @@
+/*******************************************************************************
+ * Copyright (c) 2017 Eclipse Foundation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Mikael Barbero - initial implementation
+ *******************************************************************************/
+package tech.barbero.http.message.signing.ahc4;
+
+import tech.barbero.http.message.signing.HttpResponse;
+
+public class HttpResponseWrapper extends HttpMessageWrapper implements HttpResponse {
+
+	private final org.apache.http.HttpResponse delegate;
+	
+	private HttpResponseWrapper(org.apache.http.HttpResponse request) {
+		this.delegate = request;
+	}
+
+	@Override
+	public org.apache.http.HttpResponse delegate() {
+		return delegate;
+	}
+
+	public static HttpResponseWrapper from(org.apache.http.HttpResponse request) {
+		return new HttpResponseWrapper(request);
+	}
+
+	@Override
+	public int statusCode() {
+		return delegate().getStatusLine().getStatusCode();
+	}
+
+}

@@ -17,20 +17,22 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
-import tech.barbero.httpsignatures.HttpRequest;
-import tech.barbero.httpsignatures.HttpResponse;
-import tech.barbero.httpsignatures.MessageFactory;
+import tech.barbero.http.message.signing.HttpRequest;
+import tech.barbero.http.message.signing.HttpResponse;
+import tech.barbero.http.message.signing.MessageFactory;
+import tech.barbero.http.message.signing.ahc4.HttpRequestWrapper;
+import tech.barbero.http.message.signing.ahc4.HttpResponseWrapper;
 
 public class AHCMessageFactory implements MessageFactory {
 
 	@Override
 	public HttpRequest createRequest(String method, URI uri) {
-		return AHCRequest.from(new BasicHttpEntityEnclosingRequest(method, uri.toString()));
+		return HttpRequestWrapper.from(new BasicHttpEntityEnclosingRequest(method, uri.toString()));
 	}
 
 	@Override
 	public HttpResponse createResponse(int statusCode) {
-		return AHCResponse.from(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), statusCode, "Thanks you for all the fish!")));
+		return HttpResponseWrapper.from(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), statusCode, "Thanks you for all the fish!")));
 	}
 
 }

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package tech.barbero.httpsignatures.ahc4;
 
-import tech.barbero.httpsignatures.MessageFactory;
-import tech.barbero.httpsignatures.TestHttpMessageVerifier;
+import tech.barbero.http.message.signing.MessageFactory;
+import tech.barbero.http.message.signing.TestHttpMessageVerifier;
 
 public class TestAHCMessageVerifier extends TestHttpMessageVerifier {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Eclipse Foundation and others.
+ * Copyright (c) 2018 Eclipse Foundation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,16 +8,19 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+package tech.barbero.http.message.signing;
 
-import tech.barbero.http.message.signing.MessageFactory;
-import tech.barbero.http.message.signing.TestHttpMessageSigner;
+public class HttpMessageSignatureVerificationException extends Exception {
 
-public class TestAHCMessageSigner extends TestHttpMessageSigner {
+	private static final long serialVersionUID = -661385921885321777L;
 
-	@Override
-	protected MessageFactory createFactory() {
-		return new AHCMessageFactory();
+	public HttpMessageSignatureVerificationException(String message, Throwable cause) {
+		super(message, cause);
 	}
+
+	public HttpMessageSignatureVerificationException(String string) {
+		super(string);
+	}
+
 	
 }

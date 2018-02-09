@@ -34,11 +34,13 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.RequestContent;
 import org.junit.jupiter.api.Test;
 
-import tech.barbero.httpsignatures.HashKeyMap;
-import tech.barbero.httpsignatures.HttpMessageSignatureVerificationException;
-import tech.barbero.httpsignatures.HttpMessageSignatureVerifier;
-import tech.barbero.httpsignatures.HttpMessageSigner;
-import tech.barbero.httpsignatures.HttpMessageSigner.Algorithm;
+import tech.barbero.http.message.signing.HashKeyMap;
+import tech.barbero.http.message.signing.HttpMessageSignatureVerificationException;
+import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
+import tech.barbero.http.message.signing.HttpMessageSigner;
+import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
+import tech.barbero.http.message.signing.ahc4.HttpRequestWrapper;
+import tech.barbero.http.message.signing.ahc4.HttpRequestSignerInterceptor;
 
 public class TestHttpRequestSignerInterceptor {
 
@@ -96,7 +98,7 @@ public class TestHttpRequestSignerInterceptor {
 		createHttpProcessor(httpSignature).process(request, new BasicHttpContext());
 		
 		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
-		assertTrue(signatureVerifier.verify(AHCRequest.from(request)));
+		assertTrue(signatureVerifier.verify(HttpRequestWrapper.from(request)));
 		
 	}
 }

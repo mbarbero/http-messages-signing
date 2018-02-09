@@ -10,8 +10,8 @@
  *******************************************************************************/
 package tech.barbero.httpsignatures.ahc4;
 
-import tech.barbero.httpsignatures.MessageFactory;
-import tech.barbero.httpsignatures.TestSigningStringBuilder;
+import tech.barbero.http.message.signing.MessageFactory;
+import tech.barbero.http.message.signing.TestSigningStringBuilder;
 
 public class TestAHCSigningStringBuilder extends TestSigningStringBuilder {
 
