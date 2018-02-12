@@ -42,11 +42,11 @@ public abstract class HttpMessageSignatureVerifier {
 					return verifyPublicKey(signingString, signatureHeader);
 				case SECRET_KEY:
 					return verifySecretKey(signingString, signatureHeader);
-				default:
-					throw new HttpMessageSignatureVerificationException("Unknown HTTP message signature algorithm type '" + signatureHeader.algorithm( )+ ":" + signatureHeader.algorithm().type() + "'");
 			}
+			throw new HttpMessageSignatureVerificationException("Unknown HTTP message signature algorithm type '" + signatureHeader.algorithm( )+ ":" + signatureHeader.algorithm().type() + "'");
 		} catch (Exception e) {
 			Throwables.throwIfInstanceOf(e, GeneralSecurityException.class);
+			Throwables.throwIfInstanceOf(e, HttpMessageSignatureVerificationException.class);
 			throw new HttpMessageSignatureVerificationException("Unable to verify request '"+signedMessage.toString()+"'", e);
 		}
 	}

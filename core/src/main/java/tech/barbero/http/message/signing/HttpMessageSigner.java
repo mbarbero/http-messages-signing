@@ -102,9 +102,8 @@ public abstract class HttpMessageSigner {
 				return signWithPublicKeyAlgorithm(input);
 			case SECRET_KEY:
 				return signWithSecretKeyAlgorithm(input);
-			default:
-				throw new IllegalStateException("Unknown algorithm type '"+algorithm().type()+"'");
 		}
+		throw new IllegalStateException("Unknown algorithm type '"+algorithm().type()+"'");
 	}
 	
 	private byte[] signWithSecretKeyAlgorithm(byte[] input) throws NoSuchAlgorithmException, InvalidKeyException {

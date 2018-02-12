@@ -8,7 +8,7 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+package tech.barbero.http.message.signing.ahc4;
 
 import java.net.URI;
 
@@ -20,19 +20,19 @@ import org.apache.http.message.BasicStatusLine;
 import tech.barbero.http.message.signing.HttpRequest;
 import tech.barbero.http.message.signing.HttpResponse;
 import tech.barbero.http.message.signing.MessageFactory;
-import tech.barbero.http.message.signing.ahc4.HttpRequestWrapper;
-import tech.barbero.http.message.signing.ahc4.HttpResponseWrapper;
+import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
+import tech.barbero.http.message.signing.ahc4.MessageWrapper.Response;
 
 public class AHCMessageFactory implements MessageFactory {
 
 	@Override
 	public HttpRequest createRequest(String method, URI uri) {
-		return HttpRequestWrapper.from(new BasicHttpEntityEnclosingRequest(method, uri.toString()));
+		return new Request(new BasicHttpEntityEnclosingRequest(method, uri.toString()));
 	}
 
 	@Override
 	public HttpResponse createResponse(int statusCode) {
-		return HttpResponseWrapper.from(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), statusCode, "Thanks you for all the fish!")));
+		return new Response(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), statusCode, "Thanks you for all the fish!")));
 	}
 
 }

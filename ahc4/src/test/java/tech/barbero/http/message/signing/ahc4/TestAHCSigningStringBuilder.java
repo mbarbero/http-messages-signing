@@ -10,28 +10,13 @@
  *******************************************************************************/
 package tech.barbero.http.message.signing.ahc4;
 
-import tech.barbero.http.message.signing.HttpResponse;
+import tech.barbero.http.message.signing.MessageFactory;
+import tech.barbero.http.message.signing.TestSigningStringBuilder;
 
-public class HttpResponseWrapper extends HttpMessageWrapper implements HttpResponse {
-
-	private final org.apache.http.HttpResponse delegate;
-	
-	private HttpResponseWrapper(org.apache.http.HttpResponse request) {
-		this.delegate = request;
-	}
+public class TestAHCSigningStringBuilder extends TestSigningStringBuilder {
 
 	@Override
-	public org.apache.http.HttpResponse delegate() {
-		return delegate;
+	protected MessageFactory createFactory() {
+		return new AHCMessageFactory();
 	}
-
-	public static HttpResponseWrapper from(org.apache.http.HttpResponse request) {
-		return new HttpResponseWrapper(request);
-	}
-
-	@Override
-	public int statusCode() {
-		return delegate().getStatusLine().getStatusCode();
-	}
-
 }

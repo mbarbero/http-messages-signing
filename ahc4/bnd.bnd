@@ -1,8 +1,7 @@
 -exportcontents: \
-	tech.barbero.http.message.signing
+	tech.barbero.http.message.signing.ahc4
 Import-Package: \
-	!org.apache.http.*, \
-	!com.google.common.*, \
+	org.apache.http.*;version="[4.0,5)", \
 	*
 -sources: true
 Automatic-Module-Name: ${project.artifactId}

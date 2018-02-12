@@ -8,7 +8,7 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+package tech.barbero.http.message.signing.ahc4;
 
 import tech.barbero.http.message.signing.MessageFactory;
 import tech.barbero.http.message.signing.TestHttpMessageVerifier;

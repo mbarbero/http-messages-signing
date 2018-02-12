@@ -7,7 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>http-messages-signing-core</artifactId>
-  <name>HTTP Messages Signing Core</name>
+  <name>HTTP Messages Signing - Core</name>
   <build>
     <plugins>
       <plugin>
@@ -47,12 +47,6 @@
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
       <version>1.5</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-      <version>4.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

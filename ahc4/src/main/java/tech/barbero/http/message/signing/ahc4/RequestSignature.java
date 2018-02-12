@@ -14,27 +14,41 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
 
 import tech.barbero.http.message.signing.HttpMessageSigner;
+import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
 
-public final class HttpResponseSignerInterceptor implements HttpResponseInterceptor {
+/**
+ * RequestSignature interceptor is responsible for adding <code>Signature</code>
+ * header to the outgoing requests. The content of the signature is defined by
+ * the injected {@link HttpMessageSigner} object.
+ * 
+ * @since 1.0
+ */
+public final class RequestSignature implements HttpRequestInterceptor {
 
 	private final HttpMessageSigner messageSigner;
 
-	public HttpResponseSignerInterceptor(HttpMessageSigner messageSigner) {
+	/**
+	 * Creates a new signing request interceptor.
+	 * 
+	 * @param messageSigner
+	 *            the message signer to be used to create the signature header.
+	 */
+	public RequestSignature(HttpMessageSigner messageSigner) {
 		this.messageSigner = messageSigner;
 	}
-	
+
 	@Override
-	public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+	public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
 		try {
-			messageSigner.sign(HttpResponseWrapper.from(response));
+			messageSigner.sign(new Request(request));
 		} catch (GeneralSecurityException e) {
-			throw new HttpException("Can't sign HTTP message '" + response + "'", e);
+			throw new HttpException("Can't sign HTTP request '" + request + "'", e);
 		}
 	}
-	
+
 }

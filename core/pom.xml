@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>http-messages-signing-core</artifactId>
-	<name>HTTP Messages Signing Core</name>
+	<name>HTTP Messages Signing - Core</name>
 
 	<build>
 		<plugins>

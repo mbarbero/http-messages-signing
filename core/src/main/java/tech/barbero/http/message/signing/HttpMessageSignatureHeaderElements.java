@@ -50,6 +50,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 
 	@AutoValue.Builder
 	static abstract class Builder {
+		private static final BasicHeaderValueParser HEADER_VALUE_PARSER = new BasicHeaderValueParser();
 		private static final Splitter SPLITTER = Splitter.on(" ").trimResults().omitEmptyStrings();
 
 		abstract Builder keyId(String keyId);
@@ -67,7 +68,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 		}
 		
 		Builder parse(String headerValue) {
-			HeaderElement[] elements = BasicHeaderValueParser.parseElements(headerValue, BasicHeaderValueParser.DEFAULT);
+			HeaderElement[] elements = BasicHeaderValueParser.parseElements(headerValue, HEADER_VALUE_PARSER);
 			for (HeaderElement element : elements) {
 				parseHeaderElement(element);
 			}

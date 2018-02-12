@@ -1,0 +1,4 @@
+-exportcontents: \
+	tech.barbero.http.message.signing.okhttp3
+-sources: true
+Automatic-Module-Name: ${project.artifactId}

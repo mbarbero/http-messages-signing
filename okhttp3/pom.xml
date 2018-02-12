@@ -8,22 +8,29 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>http-messages-signing-servlet</artifactId>
-	<name>HTTP Messages Signing - Servlet 3.x/4.x bridge</name>
+	<artifactId>http-messages-signing-okhttp3</artifactId>
+	<name>HTTP Messages Signing - OkHttp 3.x bridge</name>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>http-messages-signing-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>http-messages-signing-core</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

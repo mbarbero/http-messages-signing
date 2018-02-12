@@ -19,6 +19,7 @@ class ServletSignedRequest extends HttpServletRequestWrapper implements HttpRequ
 		return new ServletSignedRequest(httpServletRequest);
 	}
 	
+	@Override
 	public HttpServletRequest getRequest() {
         return (HttpServletRequest) super.getRequest();
     }

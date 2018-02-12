@@ -8,15 +8,16 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+package tech.barbero.http.message.signing.ahc4;
 
 import tech.barbero.http.message.signing.MessageFactory;
-import tech.barbero.http.message.signing.TestSigningStringBuilder;
+import tech.barbero.http.message.signing.TestHttpMessageSigner;
 
-public class TestAHCSigningStringBuilder extends TestSigningStringBuilder {
+public class TestAHCMessageSigner extends TestHttpMessageSigner {
 
 	@Override
 	protected MessageFactory createFactory() {
 		return new AHCMessageFactory();
 	}
+	
 }

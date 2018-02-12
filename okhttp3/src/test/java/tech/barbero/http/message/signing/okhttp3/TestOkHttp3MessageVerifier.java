@@ -1,3 +1,4 @@
+package tech.barbero.http.message.signing.okhttp3;
 /*******************************************************************************
  * Copyright (c) 2017 Eclipse Foundation and others.
  * All rights reserved. This program and the accompanying materials
@@ -8,16 +9,15 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+
 
 import tech.barbero.http.message.signing.MessageFactory;
-import tech.barbero.http.message.signing.TestHttpMessageSigner;
+import tech.barbero.http.message.signing.TestHttpMessageVerifier;
 
-public class TestAHCMessageSigner extends TestHttpMessageSigner {
+public class TestOkHttp3MessageVerifier extends TestHttpMessageVerifier {
 
 	@Override
 	protected MessageFactory createFactory() {
-		return new AHCMessageFactory();
+		return new OkHttp3MessageFactory();
 	}
-	
 }

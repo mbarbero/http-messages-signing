@@ -8,7 +8,7 @@
  * Contributors:
  *   Mikael Barbero - initial implementation
  *******************************************************************************/
-package tech.barbero.httpsignatures.ahc4;
+package tech.barbero.http.message.signing.ahc4;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,10 +39,9 @@ import tech.barbero.http.message.signing.HttpMessageSignatureVerificationExcepti
 import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
 import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
-import tech.barbero.http.message.signing.ahc4.HttpRequestWrapper;
-import tech.barbero.http.message.signing.ahc4.HttpRequestSignerInterceptor;
+import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
 
-public class TestHttpRequestSignerInterceptor {
+public class TestRequestSignature {
 
 	static class RequestFixedDate implements HttpRequestInterceptor {
 		@Override
@@ -79,7 +78,7 @@ public class TestHttpRequestSignerInterceptor {
 		httpProcessor.addInterceptor(new RequestContent());
 		httpProcessor.addInterceptor(new RequestFixedDate());
 		httpProcessor.addInterceptor(new RequestDigest(MessageDigest.getInstance("SHA-256")));
-		httpProcessor.addInterceptor(new HttpRequestSignerInterceptor(httpSignature));
+		httpProcessor.addInterceptor(new RequestSignature(httpSignature));
 		return httpProcessor;
 	}
 
@@ -98,7 +97,7 @@ public class TestHttpRequestSignerInterceptor {
 		createHttpProcessor(httpSignature).process(request, new BasicHttpContext());
 		
 		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
-		assertTrue(signatureVerifier.verify(HttpRequestWrapper.from(request)));
+		assertTrue(signatureVerifier.verify(new Request(request)));
 		
 	}
 }

@@ -173,6 +173,7 @@ public class TestHttpMessageSigner {
 
 	private static String formatHeader(String value) {
 		return BasicLineFormatter.formatHeader(parseHeader(value), new BasicLineFormatter() {
+			@Override
 			public CharArrayBuffer formatHeader(CharArrayBuffer buffer, Header header) {
 				if (header == null) {
 					throw new IllegalArgumentException("Header may not be null");
@@ -182,6 +183,7 @@ public class TestHttpMessageSigner {
 				return result;
 			}
 
+			@Override
 			protected void doFormatHeader(final CharArrayBuffer buffer, final Header header) {
 				final String name = header.getName();
 				final String value = formatHeaderElements(header.getValue());
@@ -202,15 +204,15 @@ public class TestHttpMessageSigner {
 	}
 	
 	private static String formatHeaderElements(String value) {
-		return BasicHeaderValueFormatter.formatElements(parseHeaderElements(value), false, BasicHeaderValueFormatter.DEFAULT);
+		return BasicHeaderValueFormatter.formatElements(parseHeaderElements(value), false, new BasicHeaderValueFormatter());
 	}
 	
 	private static HeaderElement[] parseHeaderElements(String value) {
-		return BasicHeaderValueParser.parseElements(value, BasicHeaderValueParser.DEFAULT);
+		return BasicHeaderValueParser.parseElements(value, new BasicHeaderValueParser());
 	}
 
 	private static  Header parseHeader(String value) {
-		return BasicLineParser.parseHeader(value, BasicLineParser.DEFAULT);
+		return BasicLineParser.parseHeader(value, new BasicLineParser());
 	}
 	
 	private HttpRequest createDummyRequest() {

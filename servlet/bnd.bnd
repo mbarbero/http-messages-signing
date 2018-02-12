@@ -1,8 +1,7 @@
 -exportcontents: \
-	tech.barbero.http.message.signing
+	tech.barbero.http.message.signing.servlet
 Import-Package: \
-	!org.apache.http.*, \
-	!com.google.common.*, \
+	javax.servlet.*;version="[3.0,5)", \
 	*
 -sources: true
 Automatic-Module-Name: ${project.artifactId}
