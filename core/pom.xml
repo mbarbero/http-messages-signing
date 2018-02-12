@@ -18,31 +18,27 @@
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
+						<id>shade-internal-dependencies</id>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>org.apache.httpcomponents:httpcore</include>
+									<include>com.google.guava:guava</include>
+								</includes>
+							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>org.apache.http</pattern>
+									<shadedPattern>_shaded.org.apache.http</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.google.common</pattern>
+									<shadedPattern>_shaded.com.google.common</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<minimizeJar>true</minimizeJar>
-					<artifactSet>
-						<includes>
-							<include>org.apache.httpcomponents:httpcore</include>
-							<include>com.google.guava:guava</include>
-						</includes>
-					</artifactSet>
-					<relocations>
-						<relocation>
-							<pattern>org.apache.http</pattern>
-							<shadedPattern>_shaded.org.apache.http</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>com.google.common</pattern>
-							<shadedPattern>_shaded.com.google.common</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
