@@ -324,9 +324,13 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<org.apache.httpcomponents.httpcore.version>[4.0, 5.0)</org.apache.httpcomponents.httpcore.version>
-				<com.squareup.okhttp3.okhttp.version>[3.0.1, 4.0)</com.squareup.okhttp3.okhttp.version>
-				<javax.servlet-api.version>[3.0.1, 5.0)</javax.servlet-api.version>
+				<!-- 
+				When you want to exclude next major version from a range with maven, you need to exclude MAJOR-alpha-SNAPSHOT as per 
+				https://github.com/apache/maven/blob/maven-3.5.2/maven-artifact/src/main/java/org/apache/maven/artifact/versioning/ComparableVersion.java
+				-->
+				<org.apache.httpcomponents.httpcore.version>[4.0, 5.0-alpha-SNAPSHOT)</org.apache.httpcomponents.httpcore.version>
+				<com.squareup.okhttp3.okhttp.version>[3.0.1, 4.0-alpha-SNAPSHOT)</com.squareup.okhttp3.okhttp.version>
+				<javax.servlet-api.version>[3.0.1, 5.0-alpha-SNAPSHOT)</javax.servlet-api.version>
 			</properties>
 			<build>
 				<plugins>
@@ -359,4 +363,14 @@
 		</profile>
 	</profiles>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>
