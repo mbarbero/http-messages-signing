@@ -1,0 +1,4 @@
+private-keys-v1.d/*
+!private-keys-v1.d/*.enc
+trustdb.gpg
+S.gpg-agent*
