@@ -9,8 +9,8 @@
 			<password>${env.SONATYPE_PASSWORD}</password>
 		</server>
 		<server>
-      <id>gpg.passphrase</id>
-      <passphrase>${env.GPG_PASSPHRASE}</passphrase>
-    </server>
+			<id>gpg.passphrase</id>
+			<passphrase>${env.GPG_PASSPHRASE}</passphrase>
+		</server>
 	</servers>
 </settings>
