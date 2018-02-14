@@ -1,6 +1,6 @@
 = HTTP Message Signing
 
-image:https://travis-ci.org/mbarbero/http-message-signing.svg?branch=master["Build Status", link="https://travis-ci.org/mbarbero/http-message-signing"]
+image:https://travis-ci.org/mbarbero/http-messages-signing.svg?branch=master["Build Status", link="https://travis-ci.org/mbarbero/http-messages-signing"]
 
 Java Implementation of the IETF draft for https://tools.ietf.org/html/draft-cavage-http-signatures-09[HTTP Message Signing]. It provides bridges with the following HTTP libraries:
 
