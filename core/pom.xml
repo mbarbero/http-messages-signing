@@ -36,6 +36,22 @@
 									<shadedPattern>_shaded.com.google.common</shadedPattern>
 								</relocation>
 							</relocations>
+							<filters>
+								<filter>
+									<artifact>org.apache.httpcomponents:httpcore</artifact>
+									<excludes>
+										<exclude>META-INF/**</exclude>
+										<exclude>**/package-info.class</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>com.google.guava:guava</artifact>
+									<excludes>
+										<exclude>META-INF/**</exclude>
+										<exclude>**/package-info.class</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>

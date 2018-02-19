@@ -1,12 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2018 Eclipse Foundation and others
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *   Mikaël Barbero - initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package tech.barbero.http.message.signing;
 
@@ -23,21 +21,19 @@ import java.util.Random;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import tech.barbero.http.message.signing.KeyMap;
-
 public final class HashKeyMap implements KeyMap {
 	private final Map<String, PublicKey> pubkMap;
 	private final Map<String, PrivateKey> privkMap;
 	private final Map<String, SecretKey> seckMap;
-	
-	public static final HashKeyMap INSTANCE = new HashKeyMap(); 
+
+	public static final HashKeyMap INSTANCE = new HashKeyMap();
 
 	HashKeyMap() {
 		this.pubkMap = new HashMap<>();
 		this.privkMap = new HashMap<>();
 		this.seckMap = new HashMap<>();
 	}
-	
+
 	@Override
 	public SecretKey getSecretKey(String keyId) {
 		return seckMap.get(keyId);
@@ -52,15 +48,15 @@ public final class HashKeyMap implements KeyMap {
 	public PrivateKey getPrivateKey(String keyId) {
 		return privkMap.get(keyId);
 	}
-	
+
 	static {
 		createKeyPair("key-id", 48);
 		createKeyPair("myKeyId", 512);
-		
+
 		createSecretKey("key-id", 42);
 		createSecretKey("user1", 96);
 	}
-	
+
 	private static SecretKey createSecretKey(String id, long seed) {
 		byte[] bytes = new byte[256];
 		new Random(seed).nextBytes(bytes);

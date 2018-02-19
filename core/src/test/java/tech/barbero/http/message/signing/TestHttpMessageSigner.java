@@ -1,12 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2017 Eclipse Foundation and others
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2018 Eclipse Foundation and others
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *   Mikaël Barbero - initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package tech.barbero.http.message.signing;
 
@@ -17,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
 import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -34,10 +30,6 @@ import org.apache.http.util.CharArrayBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import tech.barbero.http.message.signing.HttpMessageSignatureVerificationException;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
-import tech.barbero.http.message.signing.HttpMessageSigner;
-import tech.barbero.http.message.signing.HttpRequest;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
 
 public class TestHttpMessageSigner {
@@ -52,78 +44,79 @@ public class TestHttpMessageSigner {
 	protected MessageFactory createFactory() {
 		return new MessageFactory.MockImpl();
 	}
-	
+
 	@Test
-	public void emptyPrivateKey() throws InvalidKeyException, NoSuchAlgorithmException {
+	public void emptyPrivateKey() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
 			HttpMessageSigner.builder()
-				.algorithm(Algorithm.RSA_SHA256)
-				.build();
+					.algorithm(Algorithm.RSA_SHA256)
+					.build();
 		});
 		assertEquals(e.getMessage(), "Missing required properties: keyId keyMap");
 	}
-	
+
 	@Test
-	public void signatureWithoutDate() throws InvalidKeyException, NoSuchAlgorithmException {
+	public void signatureWithoutDate() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
 			HttpMessageSigner.builder()
-				.algorithm(Algorithm.RSA_SHA256)
-				.keyMap(HashKeyMap.INSTANCE)
-				.keyId("myKeyId")
-				.addHeaderToSign("XXXX")
-				.build();
+					.algorithm(Algorithm.RSA_SHA256)
+					.keyMap(HashKeyMap.INSTANCE)
+					.keyId("myKeyId")
+					.addHeaderToSign("XXXX")
+					.build();
 		});
-		assertEquals(e.getMessage(), "HttpMessageSigner should be configured to sign the '"+HttpMessageSigner.HEADER_DATE+"' header");
+		assertEquals(e.getMessage(), "HttpMessageSigner should be configured to sign the '" + HttpMessageSigner.HEADER_DATE + "' header");
 	}
-	
+
 	@Test
-	public void signatureWithoutRequestTarget() throws InvalidKeyException, NoSuchAlgorithmException {
+	public void signatureWithoutRequestTarget() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
 			HttpMessageSigner.builder()
-				.algorithm(Algorithm.RSA_SHA256)
-				.keyMap(HashKeyMap.INSTANCE)
-				.keyId("myKeyId")
-				.addHeaderToSign("date")
-				.build();
+					.algorithm(Algorithm.RSA_SHA256)
+					.keyMap(HashKeyMap.INSTANCE)
+					.keyId("myKeyId")
+					.addHeaderToSign("date")
+					.build();
 		});
-		assertEquals(e.getMessage(), "HttpMessageSigner should be configured to sign the '"+HttpMessageSigner.REQUEST_TARGET+"' header");
+		assertEquals(e.getMessage(), "HttpMessageSigner should be configured to sign the '" + HttpMessageSigner.REQUEST_TARGET + "' header");
 	}
-	
+
 	@Test
-	public void signatureWithUnknownHeader() throws GeneralSecurityException {
+	public void signatureWithUnknownHeader() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
 			HttpMessageSigner httpSigner = HttpMessageSigner.builder()
-				.algorithm(Algorithm.RSA_SHA256)
-				.keyMap(HashKeyMap.INSTANCE)
-				.keyId("myKeyId")
-				.addHeaderToSign("date")
-				.addHeaderToSign(HttpMessageSigner.REQUEST_TARGET)
-				.addHeaderToSign("UnknownHeader")
-				.build();
+					.algorithm(Algorithm.RSA_SHA256)
+					.keyMap(HashKeyMap.INSTANCE)
+					.keyId("myKeyId")
+					.addHeaderToSign("date")
+					.addHeaderToSign(HttpMessageSigner.REQUEST_TARGET)
+					.addHeaderToSign("UnknownHeader")
+					.build();
 			httpSigner.sign(createDummyRequest());
 		});
 		assertEquals(e.getMessage(), "The following headers cannot be found in the message: 'UnknownHeader'");
 	}
-	
+
 	@Test
 	public void publicKeySignature() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
 		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.RSA_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id").build();
-		
+
 		HttpRequest signedRequest = httpSigner.sign(createDummyRequest());
 		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(signedRequest));
 	}
-	
+
 	@Test
-	public void publicDuplicatedHeaderToSign() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
-		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.RSA_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id").addHeaderToSign(HttpMessageSigner.REQUEST_TARGET).addHeaderToSign("Date").addHeaderToSign("X2").addHeaderToSign("Date").build();
+	public void publicDuplicatedHeaderToSign() {
+		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.RSA_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id")
+				.addHeaderToSign(HttpMessageSigner.REQUEST_TARGET).addHeaderToSign("Date").addHeaderToSign("X2").addHeaderToSign("Date").build();
 		assertIterableEquals(Arrays.asList("(request-target)", "Date", "X2"), httpSigner.headersToSign());
 	}
 
 	@Test
 	public void privateKeySignature() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
 		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.HMAC_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id").build();
-		
+
 		HttpRequest signedRequest = httpSigner.sign(createDummyRequest());
 		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(signedRequest));
@@ -136,7 +129,7 @@ public class TestHttpMessageSigner {
 		String signatureHeader = messageSigner.sign(rfcData.request()).headerValues(HttpMessageSigner.HEADER_SIGNATURE).stream().collect(Collectors.joining(","));
 		assertHeaderEquals(RFCData.SIGNATURE_HEADER__DEFAULT_TEST, HttpMessageSigner.HEADER_SIGNATURE + ": " + signatureHeader);
 	}
-	
+
 	@Test
 	public void basicTestFromRFC() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
@@ -148,7 +141,7 @@ public class TestHttpMessageSigner {
 		String signatureHeader = messageSigner.sign(rfcData.request()).headerValues(HttpMessageSigner.HEADER_SIGNATURE).stream().collect(Collectors.joining(","));
 		assertHeaderEquals(RFCData.SIGNATURE_HEADER__BASIC_TEST, HttpMessageSigner.HEADER_SIGNATURE + ": " + signatureHeader);
 	}
-	
+
 	@Test
 	public void allHeadersTestFromRFC() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
@@ -163,12 +156,11 @@ public class TestHttpMessageSigner {
 		String signatureHeader = messageSigner.sign(rfcData.request()).headerValues(HttpMessageSigner.HEADER_SIGNATURE).stream().collect(Collectors.joining(","));
 		assertHeaderEquals(RFCData.SIGNATURE_HEADER__ALL_HEADERS_TEST, HttpMessageSigner.HEADER_SIGNATURE + ": " + signatureHeader);
 	}
-	
+
 	private static void assertHeaderEquals(String expected, String actual) {
 		assertEquals(
 				formatHeader(expected),
-				formatHeader(actual)
-			);
+				formatHeader(actual));
 	}
 
 	private static String formatHeader(String value) {
@@ -202,19 +194,19 @@ public class TestHttpMessageSigner {
 			}
 		});
 	}
-	
+
 	private static String formatHeaderElements(String value) {
 		return BasicHeaderValueFormatter.formatElements(parseHeaderElements(value), false, new BasicHeaderValueFormatter());
 	}
-	
+
 	private static HeaderElement[] parseHeaderElements(String value) {
 		return BasicHeaderValueParser.parseElements(value, new BasicHeaderValueParser());
 	}
 
-	private static  Header parseHeader(String value) {
+	private static Header parseHeader(String value) {
 		return BasicLineParser.parseHeader(value, new BasicLineParser());
 	}
-	
+
 	private HttpRequest createDummyRequest() {
 		HttpRequest request = messageFactory.createRequest("post", URI.create("http://localhost/service"));
 		request.addHeader("Date", LocalDateTime.of(2016, 3, 20, 13, 20, 0).toInstant(ZoneOffset.ofHours(1)).toString());

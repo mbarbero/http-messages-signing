@@ -1,15 +1,12 @@
-package tech.barbero.http.message.signing.okhttp3;
 /*******************************************************************************
- * Copyright (c) 2017 Eclipse Foundation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2018 Eclipse Foundation and others
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *   Mikael Barbero - initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
-
+package tech.barbero.http.message.signing.okhttp3;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,7 +43,12 @@ public class TestOkHttp3RequestSignerInterceptor {
 				.addHeaderToSign("Content-Length")
 				.addHeaderToSign("Digest")
 				.keyId("myKeyId").build();
-		Request request = new Request.Builder().post(RequestBody.create(MediaType.parse("text/plain"), "Hello Worlds!")).url("http://www.example.com/web/service?foo=bar").addHeader("date", "20160320").addHeader("Content-Length", "18").addHeader("digest", "ab4509qsdhabf236G3==").build();
+		Request request = new Request.Builder().post(RequestBody.create(MediaType.parse("text/plain"), "Hello Worlds!"))
+				.url("http://www.example.com/web/service?foo=bar")
+				.addHeader("date", "20160320")
+				.addHeader("Content-Length", "18")
+				.addHeader("digest", "ab4509qsdhabf236G3==")
+				.build();
 		OkHttp3RequestSignerInterceptor interceptor = new OkHttp3RequestSignerInterceptor(httpSignature);
 		AtomicBoolean pass = new AtomicBoolean(false);
 		interceptor.intercept(new Chain() {
@@ -54,7 +56,7 @@ public class TestOkHttp3RequestSignerInterceptor {
 			public Request request() {
 				return request;
 			}
-			
+
 			@Override
 			public Response proceed(Request request) throws IOException {
 				HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
@@ -66,7 +68,7 @@ public class TestOkHttp3RequestSignerInterceptor {
 				}
 				return null;
 			}
-			
+
 			@Override
 			public Connection connection() {
 				return null;

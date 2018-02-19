@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2018 Eclipse Foundation and others
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
 package tech.barbero.http.message.signing.okhttp3;
 
 import java.io.IOException;
@@ -15,7 +23,7 @@ public class OkHttp3RequestSignerInterceptor implements Interceptor {
 	public OkHttp3RequestSignerInterceptor(HttpMessageSigner messageSigner) {
 		this.messageSigner = Objects.requireNonNull(messageSigner);
 	}
-	
+
 	@Override
 	public Response intercept(Chain chain) throws IOException {
 		OkHttp3RequestWrapper request = OkHttp3RequestWrapper.from(chain.request());

@@ -1,12 +1,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>tech.barbero.http-messages-signing</groupId>
 	<artifactId>http-messages-signing-parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>HTTP Messages Signing Parent</name>
 	<packaging>pom</packaging>
+	
 	<description>Implementation of the Internet-Draft "Signing HTTP Messages", draft-cavage-http-signatures-09, https://tools.ietf.org/html/draft-cavage-http-signatures-09</description>
+	<url>https://github.com/mbarbero/http-messages-signing</url>
+
+	<scm>
+		<url>https://github.com/mbarbero/http-messages-signing/</url>
+		<connection>scm:git:https://github.com/mbarbero/http-messages-signing.git</connection>
+		<developerConnection>scm:git:git@github.com:mbarbero/http-messages-signing.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/mbarbero/http-messages-signing/issues</url>
+	</issueManagement>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License 2.0</name>
+			<url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+		</license>
+	</licenses>
 
 	<modules>
 		<module>core</module>
@@ -94,6 +116,14 @@
 				<groupId>biz.aQute.bnd</groupId>
 				<artifactId>bnd-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -122,6 +152,23 @@
 							<version>2.0.16</version>
 						</dependency>
 					</dependencies>
+				</plugin>
+
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>3.1.1</version>
+					<executions>
+						<execution>
+							<id>spotbugs-default</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<includeTests>true</includeTests>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 
 				<plugin>
@@ -290,6 +337,57 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}/META-INF/</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${project.basedir}/..</directory>
+										<includes>
+											<include>LICENSE.adoc</include>
+											<include>NOTICE.adoc</include>
+										</includes>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.0.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>8.8</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<failsOnError>true</failsOnError>
+						<configLocation>releng/reporting/checkstyle.xml</configLocation>
+						<headerLocation>releng/reporting/EPLv2.regexp.txt</headerLocation>
+						<consoleOutput>true</consoleOutput>
+						<linkXRef>false</linkXRef>
+						<excludes>**/AutoValue_*.java</excludes>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>checkstyle</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 				<plugin>
@@ -319,10 +417,7 @@
 
 	<profiles>
 		<profile>
-			<id>release</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+			<id>prepare-deploy</id>
 			<properties>
 				<!-- When you want to exclude next major version from a range with maven, 
 					you need to exclude MAJOR-alpha-SNAPSHOT as per https://github.com/apache/maven/blob/maven-3.5.2/maven-artifact/src/main/java/org/apache/maven/artifact/versioning/ComparableVersion.java -->
@@ -341,6 +436,13 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>deploy</id>
+			<build>
+				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
@@ -357,6 +459,9 @@
 		</profile>
 		<profile>
 			<id>compile</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<org.apache.httpcomponents.httpcore.version>[4.0]</org.apache.httpcomponents.httpcore.version>
 				<com.squareup.okhttp3.okhttp.version>[3.0.1]</com.squareup.okhttp3.okhttp.version>

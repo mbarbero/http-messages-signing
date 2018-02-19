@@ -1,12 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2017 Eclipse Foundation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2018 Eclipse Foundation and others
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *   Mikael Barbero - initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package tech.barbero.http.message.signing.ahc4;
 
@@ -60,7 +58,7 @@ public class TestRequestSignature {
 		@Override
 		public void process(HttpRequest request, HttpContext context) throws IOException {
 			if (request instanceof HttpEntityEnclosingRequest) {
-				try(InputStream is = ((HttpEntityEnclosingRequest) request).getEntity().getContent()) {
+				try (InputStream is = ((HttpEntityEnclosingRequest) request).getEntity().getContent()) {
 					byte[] buffer = new byte[1024];
 					int length;
 					while ((length = is.read(buffer)) != -1) {
@@ -72,7 +70,7 @@ public class TestRequestSignature {
 			}
 		}
 	}
-	
+
 	static BasicHttpProcessor createHttpProcessor(HttpMessageSigner httpSignature) throws NoSuchAlgorithmException {
 		BasicHttpProcessor httpProcessor = new BasicHttpProcessor();
 		httpProcessor.addInterceptor(new RequestContent());
@@ -95,9 +93,9 @@ public class TestRequestSignature {
 		HttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest("GET", "http://www.example.com/web/service?foo=bar");
 		request.setEntity(new StringEntity("Hello World!"));
 		createHttpProcessor(httpSignature).process(request, new BasicHttpContext());
-		
+
 		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(new Request(request)));
-		
+
 	}
 }

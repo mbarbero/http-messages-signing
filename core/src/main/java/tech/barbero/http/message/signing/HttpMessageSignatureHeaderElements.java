@@ -1,12 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 Eclipse Foundation and others
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
- * Contributors:
- *   Mikaël Barbero - initial implementation
+ * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package tech.barbero.http.message.signing;
 
@@ -21,14 +19,13 @@ import org.apache.http.message.BasicHeaderValueParser;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Splitter;
 
-import tech.barbero.http.message.signing.AutoValue_HttpMessageSignatureHeaderElements;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
 
 @AutoValue
 public abstract class HttpMessageSignatureHeaderElements {
 
-	HttpMessageSignatureHeaderElements() {}
-	
+	HttpMessageSignatureHeaderElements() { }
+
 	public abstract String keyId();
 	public abstract Algorithm algorithm();
 	public abstract List<String> signedHeaders();
@@ -37,7 +34,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 	public static HttpMessageSignatureHeaderElements fromHeaderValue(String header) {
 		return HttpMessageSignatureHeaderElements.builder().parse(header).build();
 	}
-	
+
 	public static HttpMessageSignatureHeaderElements fromHeaderValuesList(List<String> headers) {
 		Builder builder = HttpMessageSignatureHeaderElements.builder();
 		headers.forEach(header -> builder.parse(header));
@@ -49,7 +46,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 	}
 
 	@AutoValue.Builder
-	static abstract class Builder {
+	abstract static class Builder {
 		private static final BasicHeaderValueParser HEADER_VALUE_PARSER = new BasicHeaderValueParser();
 		private static final Splitter SPLITTER = Splitter.on(" ").trimResults().omitEmptyStrings();
 
@@ -59,14 +56,14 @@ public abstract class HttpMessageSignatureHeaderElements {
 		abstract List<String> signedHeaders();
 		abstract Builder signature(String signature);
 		abstract HttpMessageSignatureHeaderElements autoBuild();
-		
+
 		HttpMessageSignatureHeaderElements build() {
 			if (signedHeaders().isEmpty()) {
 				signedHeaders().add(normalizeHeader(HttpMessageSigner.HEADER_DATE));
 			}
 			return autoBuild();
 		}
-		
+
 		Builder parse(String headerValue) {
 			HeaderElement[] elements = BasicHeaderValueParser.parseElements(headerValue, HEADER_VALUE_PARSER);
 			for (HeaderElement element : elements) {
@@ -74,10 +71,10 @@ public abstract class HttpMessageSignatureHeaderElements {
 			}
 			return this;
 		}
-		
+
 		private void parseHeaderElement(HeaderElement element) {
 			String elementValue = element.getValue();
-			switch(element.getName()) {
+			switch (element.getName()) {
 				case HttpMessageSigner.PARAM_KEY_ID:
 					keyId(elementValue);
 					break;
@@ -87,7 +84,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 						algorithm(alg.get());
 						break;
 					}
-					throw new IllegalStateException("Unsupported algorithm '"+elementValue+"'");
+					throw new IllegalStateException("Unsupported algorithm '" + elementValue + "'");
 				case HttpMessageSigner.PARAM_HEADERS:
 					signedHeaders(SPLITTER.splitToList(elementValue).stream()
 							.map(Builder::normalizeHeader)
@@ -102,7 +99,7 @@ public abstract class HttpMessageSignatureHeaderElements {
 					break;
 			}
 		}
-		
+
 		static String normalizeHeader(String header) {
 			return header.toLowerCase();
 		}
