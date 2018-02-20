@@ -285,6 +285,9 @@
 								<goal>aggregate</goal>
 							</goals>
 							<phase>package</phase>
+							<configuration>
+								<destDir>${project.version}</destDir>
+							</configuration>
 						</execution>
 					</executions>
 				</plugin>
