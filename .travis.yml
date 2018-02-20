@@ -14,7 +14,7 @@ env:
 
 script:
   - ./releng/docker-build.sh
-  - ./releng/docker-run.sh "releng/ci.sh"
+  - ./releng/docker-run.sh "releng/build.sh"
 
 deploy:
   - provider: script
