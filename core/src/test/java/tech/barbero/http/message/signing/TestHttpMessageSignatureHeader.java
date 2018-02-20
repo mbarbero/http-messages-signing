@@ -23,7 +23,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void emptyHeader() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValue("");
+			SignatureHeaderElements.fromHeaderValue("");
 		});
 		assertEquals("Missing required properties: keyId algorithm signature", e.getMessage());
 	}
@@ -31,7 +31,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void emptyHeaderList() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValuesList(Arrays.asList());
+			SignatureHeaderElements.fromHeaderValuesList(Arrays.asList());
 		});
 		assertEquals("Missing required properties: keyId algorithm signature", e.getMessage());
 	}
@@ -39,7 +39,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void missingKeyId() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValue(
+			SignatureHeaderElements.fromHeaderValue(
 					"algorithm=\"rsa-sha256\",signature=\"XXXXXXXXXXXXXXXX==\"");
 		});
 		assertEquals("Missing required properties: keyId", e.getMessage());
@@ -48,7 +48,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void missingAlgorithm() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValue(
+			SignatureHeaderElements.fromHeaderValue(
 					"keyId=\"rsa-key-1\",signature=\"XXXXXXXXXXXXXXXX==\"");
 		});
 		assertEquals("Missing required properties: algorithm", e.getMessage());
@@ -57,7 +57,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void missingSignature() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValue(
+			SignatureHeaderElements.fromHeaderValue(
 					"algorithm=\"rsa-sha256\",keyId=\"rsa-key-1\"");
 		});
 		assertEquals("Missing required properties: signature", e.getMessage());
@@ -65,7 +65,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void missingHeaders() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"algorithm=\"rsa-sha256\",keyId=\"rsa-key-1\",signature=\"XXXXXXXXXXXXXXXX==\"");
 		assertEquals("rsa-key-1", signatureHeader.keyId());
 		assertEquals(Algorithm.RSA_SHA256, signatureHeader.algorithm());
@@ -75,7 +75,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void missingHeaders2() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"algorithm=\"rsa-sha256\",headers=\"mmmm\",keyId=\"rsa-key-1\",signature=\"XXXXXXXXXXXXXXXX==\"");
 		assertEquals("rsa-key-1", signatureHeader.keyId());
 		assertEquals(Algorithm.RSA_SHA256, signatureHeader.algorithm());
@@ -85,7 +85,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void singleHeader1() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\","
 						+ "headers=\"(request-target) host date digest content-length\","
 						+ "signature=\"XXXXXXXXXXXXXXXX==\"");
@@ -97,7 +97,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void singleHeader2() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
 				"keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\","
 						+ "headers=\"(request-target) host date digest content-length\","
 						+ "signature=\"XXXXXXXXXXXXXXXX==\""));
@@ -109,7 +109,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void multipleSignedHeaders() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
 				"keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\","
 						+ "headers=\"host date host content-length\","
 						+ "signature=\"XXXXXXXXXXXXXXXX==\""));
@@ -121,7 +121,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void multipleHeader() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValuesList(Arrays.asList(
 				"keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\"",
 				"headers=\"(request-target) host date digest content-length\"",
 				"signature=\"XXXXXXXXXXXXXXXX==\""));
@@ -133,7 +133,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void multipleHeaderWithVariousSpaces() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\","
 						+ "headers=\"(request-target) host date digest content-length\","
 						+ "signature=\"XXXXXXXXXXXXXXXX==\"");
@@ -146,7 +146,7 @@ public class TestHttpMessageSignatureHeader {
 	@Test
 	public void unsupportedAlgorithm() {
 		IllegalStateException e = assertThrows(IllegalStateException.class, () -> {
-			HttpMessageSignatureHeaderElements.fromHeaderValue(
+			SignatureHeaderElements.fromHeaderValue(
 					"keyId=\"rsa-key-1\",algorithm=\"rsa-sha512\","
 							+ "headers=\"(request-target) host date digest content-length\","
 							+ "signature=\"XXXXXXXXXXXXXXXX==\"");
@@ -156,7 +156,7 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void withUnknownElement() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"pirate=3l33t,keyId=\"rsa-key-1\",algorithm=\"rsa-sha256\","
 						+ "headers=\"(request-target) host date digest content-length\",again=\"overflooow\","
 						+ "signature=\"XXXXXXXXXXXXXXXX==\"");
@@ -168,14 +168,14 @@ public class TestHttpMessageSignatureHeader {
 
 	@Test
 	public void twoAlgorithms() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"algorithm=\"rsa-sha256\",keyId=\"rsa-key-1\",algorithm=\"rsa-sha1\",signature=\"XXXXXXXXXXXXXXXX==\"");
 		assertEquals(Algorithm.RSA_SHA1, signatureHeader.algorithm());
 	}
 
 	@Test
 	public void threeKeyId() {
-		HttpMessageSignatureHeaderElements signatureHeader = HttpMessageSignatureHeaderElements.fromHeaderValue(
+		SignatureHeaderElements signatureHeader = SignatureHeaderElements.fromHeaderValue(
 				"algorithm=\"rsa-sha256\",keyId=\"rsa-key-1\",keyId=\"rsa-key-2\", ,,,signature=\"XXXXXXXXXXXXXXXX==\",keyId=rsa-key-3");
 		assertEquals("rsa-key-3", signatureHeader.keyId());
 	}

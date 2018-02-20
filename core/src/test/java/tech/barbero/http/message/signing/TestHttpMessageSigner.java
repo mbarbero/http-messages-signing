@@ -98,11 +98,11 @@ public class TestHttpMessageSigner {
 	}
 
 	@Test
-	public void publicKeySignature() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void publicKeySignature() throws GeneralSecurityException {
 		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.RSA_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id").build();
 
 		HttpRequest signedRequest = httpSigner.sign(createDummyRequest());
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(signedRequest));
 	}
 
@@ -114,11 +114,11 @@ public class TestHttpMessageSigner {
 	}
 
 	@Test
-	public void privateKeySignature() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void privateKeySignature() throws GeneralSecurityException {
 		HttpMessageSigner httpSigner = HttpMessageSigner.builder().algorithm(Algorithm.HMAC_SHA256).keyMap(HashKeyMap.INSTANCE).keyId("key-id").build();
 
 		HttpRequest signedRequest = httpSigner.sign(createDummyRequest());
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(signedRequest));
 	}
 
@@ -195,7 +195,7 @@ public class TestHttpMessageSigner {
 		});
 	}
 
-	private static String formatHeaderElements(String value) {
+	static String formatHeaderElements(String value) {
 		return BasicHeaderValueFormatter.formatElements(parseHeaderElements(value), false, new BasicHeaderValueFormatter());
 	}
 

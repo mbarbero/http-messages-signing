@@ -8,6 +8,15 @@
  *******************************************************************************/
 package tech.barbero.http.message.signing;
 
+/**
+ * After receiving and interpreting a request message, a server responds with an HTTP response message.
+ */
 public interface HttpResponse extends HttpMessage {
+
+	/**
+	 * Returns the numeric status code of the response.
+	 *
+	 * @return the numeric status code of the response.
+	 */
 	int statusCode();
 }

@@ -20,19 +20,29 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import tech.barbero.http.message.signing.HttpMessageSignatureVerificationException;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
+import tech.barbero.http.message.signing.SignatureHeaderVerifier;
 
-public class HttpMessageSignatureVerifierServletFilter implements Filter {
+/**
+ * A simple servlet filter that send an HTTP 401 unauthorized status code if the signature is not recognized.
+ */
+public class SignatureHeaderVerifierServletFilter implements Filter {
 
-	private final HttpMessageSignatureVerifier httpMessageSignatureVerifier;
+	private final SignatureHeaderVerifier signatureVerifier;
 
-	public HttpMessageSignatureVerifierServletFilter(HttpMessageSignatureVerifier httpMessageSignatureVerifier) {
-		this.httpMessageSignatureVerifier = httpMessageSignatureVerifier;
+	/**
+	 * Creates a new {@code SignatureHeaderVerifierServletFilter} which will check HTTP request signatures with the given
+	 * {@link SignatureHeaderVerifier signatureVerifier}.
+	 *
+	 * @param signatureVerifier
+	 *          The signature verifier which will check HTTP request signature.
+	 */
+	public SignatureHeaderVerifierServletFilter(SignatureHeaderVerifier signatureVerifier) {
+		this.signatureVerifier = signatureVerifier;
 	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		// no configuration for this Filter.
 	}
 
 	@Override
@@ -46,14 +56,11 @@ public class HttpMessageSignatureVerifierServletFilter implements Filter {
 
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		try {
-			if (httpMessageSignatureVerifier.verify(ServletSignedRequest.from(request))) {
+			if (this.signatureVerifier.verify(ServletSignedRequest.from(request))) {
 				chain.doFilter(request, response);
 			} else {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			}
-		} catch (HttpMessageSignatureVerificationException e) {
-			request.getServletContext().log(e.getMessage(), e);
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (GeneralSecurityException e) {
 			throw new ServletException(e);
 		}
@@ -61,6 +68,7 @@ public class HttpMessageSignatureVerifierServletFilter implements Filter {
 
 	@Override
 	public void destroy() {
+		// we don't hold any resource, no need to release/destroy anything.
 	}
 
 }

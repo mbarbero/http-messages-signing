@@ -6,26 +6,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
-package tech.barbero.http.message.signing;
-
-import java.net.URI;
-
 /**
- * A request message from a client to a server.
+ * http-messages-signing bridge with OkHttp 3.x.
  */
-public interface HttpRequest extends HttpMessage {
-
-	/**
-	 * Returns the method of this request.
-	 *
-	 * @return the method of this request.
-	 */
-	String method();
-
-	/**
-	 * Returns the target URI of this request.
-	 *
-	 * @return the target URI of this request.
-	 */
-	URI uri();
-}
+@org.osgi.annotation.versioning.Version("1.0.0")
+package tech.barbero.http.message.signing.okhttp3;

@@ -33,8 +33,7 @@ import org.apache.http.protocol.RequestContent;
 import org.junit.jupiter.api.Test;
 
 import tech.barbero.http.message.signing.HashKeyMap;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerificationException;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
+import tech.barbero.http.message.signing.SignatureHeaderVerifier;
 import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
 import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
@@ -81,7 +80,7 @@ public class TestRequestSignature {
 	}
 
 	@Test
-	public void testInterceptor() throws GeneralSecurityException, HttpException, IOException, HttpMessageSignatureVerificationException {
+	public void testInterceptor() throws GeneralSecurityException, HttpException, IOException {
 		HttpMessageSigner httpSignature = HttpMessageSigner.builder()
 				.algorithm(Algorithm.RSA_SHA256)
 				.keyMap(HashKeyMap.INSTANCE)
@@ -94,7 +93,7 @@ public class TestRequestSignature {
 		request.setEntity(new StringEntity("Hello World!"));
 		createHttpProcessor(httpSignature).process(request, new BasicHttpContext());
 
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		assertTrue(signatureVerifier.verify(new Request(request)));
 
 	}

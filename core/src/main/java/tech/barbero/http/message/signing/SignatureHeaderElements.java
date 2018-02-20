@@ -9,8 +9,10 @@
 package tech.barbero.http.message.signing;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.http.HeaderElement;
@@ -22,27 +24,31 @@ import com.google.common.base.Splitter;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
 
 @AutoValue
-public abstract class HttpMessageSignatureHeaderElements {
+abstract class SignatureHeaderElements {
 
-	HttpMessageSignatureHeaderElements() { }
-
-	public abstract String keyId();
-	public abstract Algorithm algorithm();
-	public abstract List<String> signedHeaders();
-	public abstract String signature();
-
-	public static HttpMessageSignatureHeaderElements fromHeaderValue(String header) {
-		return HttpMessageSignatureHeaderElements.builder().parse(header).build();
+	SignatureHeaderElements() {
 	}
 
-	public static HttpMessageSignatureHeaderElements fromHeaderValuesList(List<String> headers) {
-		Builder builder = HttpMessageSignatureHeaderElements.builder();
+	public abstract String keyId();
+
+	public abstract Algorithm algorithm();
+
+	public abstract List<String> signedHeaders();
+
+	public abstract String signature();
+
+	public static SignatureHeaderElements fromHeaderValue(String header) {
+		return SignatureHeaderElements.builder().parse(header).build();
+	}
+
+	public static SignatureHeaderElements fromHeaderValuesList(List<String> headers) {
+		Builder builder = SignatureHeaderElements.builder();
 		headers.forEach(header -> builder.parse(header));
 		return builder.build();
 	}
 
 	static Builder builder() {
-		return new AutoValue_HttpMessageSignatureHeaderElements.Builder().signedHeaders(new ArrayList<>());
+		return new AutoValue_SignatureHeaderElements.Builder().signedHeaders(new ArrayList<>());
 	}
 
 	@AutoValue.Builder
@@ -51,13 +57,18 @@ public abstract class HttpMessageSignatureHeaderElements {
 		private static final Splitter SPLITTER = Splitter.on(" ").trimResults().omitEmptyStrings();
 
 		abstract Builder keyId(String keyId);
-		abstract Builder algorithm(Algorithm algorithm);
-		abstract Builder signedHeaders(List<String> headers);
-		abstract List<String> signedHeaders();
-		abstract Builder signature(String signature);
-		abstract HttpMessageSignatureHeaderElements autoBuild();
 
-		HttpMessageSignatureHeaderElements build() {
+		abstract Builder algorithm(Algorithm algorithm);
+
+		abstract Builder signedHeaders(List<String> headers);
+
+		abstract List<String> signedHeaders();
+
+		abstract Builder signature(String signature);
+
+		abstract SignatureHeaderElements autoBuild();
+
+		SignatureHeaderElements build() {
 			if (signedHeaders().isEmpty()) {
 				signedHeaders().add(normalizeHeader(HttpMessageSigner.HEADER_DATE));
 			}
@@ -79,7 +90,9 @@ public abstract class HttpMessageSignatureHeaderElements {
 					keyId(elementValue);
 					break;
 				case HttpMessageSigner.PARAM_ALGORITHM:
-					Optional<Algorithm> alg = Algorithm.findFirst(a -> elementValue.equals(a.algorithmName()));
+					Optional<Algorithm> alg = EnumSet.allOf(Algorithm.class).stream()
+							.filter((Predicate<Algorithm>) a -> elementValue.equals(a.algorithmName()))
+							.findFirst();
 					if (alg.isPresent()) {
 						algorithm(alg.get());
 						break;

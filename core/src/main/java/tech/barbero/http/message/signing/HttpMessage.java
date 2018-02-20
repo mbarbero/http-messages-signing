@@ -10,8 +10,29 @@ package tech.barbero.http.message.signing;
 
 import java.util.List;
 
+/**
+ * HTTP messages consist of requests from client to server and responses from server to client. This interface expose the minimum surface for the purpose of
+ * http-message-signing.
+ */
 public interface HttpMessage {
+
+	/**
+	 * Returns all the values of the headers with a specified name of this message. Headers and associated values must be ordered in the sequence they will be sent over a
+	 * connection.
+	 *
+	 * @param name
+	 *          the name of the header of which values are returned.
+	 * @return values of all headers with a specified name.
+	 */
 	List<String> headerValues(String name);
 
+	/**
+	 * Adds a header with the given value to this message.
+	 *
+	 * @param name
+	 *          the name of the header.
+	 * @param value
+	 *          the value of the header.
+	 */
 	void addHeader(String name, String value);
 }

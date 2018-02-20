@@ -42,36 +42,36 @@ public class TestHttpMessageVerifier {
 	}
 
 	@Test
-	public void defaultRFCTest() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void defaultRFCTest() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(rfcData.keyMap()).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(rfcData.keyMap()).build();
 		HttpRequest request = rfcData.request();
 		request.addHeader(HttpMessageSigner.HEADER_SIGNATURE, RFCData.SIGNATURE_HEADER_VALUE__DEFAULT_TEST);
 		assertTrue(signatureVerifier.verify(request));
 	}
 
 	@Test
-	public void basicRFCTest() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void basicRFCTest() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(rfcData.keyMap()).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(rfcData.keyMap()).build();
 		HttpRequest request = rfcData.request();
 		request.addHeader(HttpMessageSigner.HEADER_SIGNATURE, RFCData.SIGNATURE_HEADER_VALUE__BASIC_TEST);
 		assertTrue(signatureVerifier.verify(request));
 	}
 
 	@Test
-	public void allHeadersRFCTest() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void allHeadersRFCTest() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(rfcData.keyMap()).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(rfcData.keyMap()).build();
 		HttpRequest request = rfcData.request();
 		request.addHeader(HttpMessageSigner.HEADER_SIGNATURE, RFCData.SIGNATURE_HEADER_VALUE__ALL_HEADERS_TEST);
 		assertTrue(signatureVerifier.verify(request));
 	}
 
 	@Test
-	public void failingSignature() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
+	public void failingSignature() throws GeneralSecurityException {
 		RFCData rfcData = new RFCData(messageFactory);
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(rfcData.keyMap()).build();
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(rfcData.keyMap()).build();
 		HttpRequest request = rfcData.request();
 		request.addHeader(HttpMessageSigner.HEADER_SIGNATURE,
 				RFCData.SIGNATURE_HEADER_VALUE__ALL_HEADERS_TEST.replaceFirst("signature=\"(.*)\"", "signature=\"" + toB64(randomByteArray(128)) + "\""));
@@ -82,7 +82,7 @@ public class TestHttpMessageVerifier {
 	public void failingBadKey() {
 		assertThrows(InvalidKeyException.class, () -> {
 			RFCData rfcData = new RFCData(messageFactory);
-			HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(new KeyMap() {
+			SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(new KeyMap() {
 				@Override
 				public SecretKey getSecretKey(String keyId) {
 					return null;
@@ -126,10 +126,10 @@ public class TestHttpMessageVerifier {
 	public void failingBadRequest() {
 		HttpRequest request = messageFactory.createRequest("POST", URI.create("http://example.com/foo/bar"));
 		request.addHeader("Signature", "keyId=id,signature=AAAA=");
-		HttpMessageSignatureVerificationException e = assertThrows(HttpMessageSignatureVerificationException.class, () -> {
-			HttpMessageSignatureVerifier.builder().keyMap(new HashKeyMap()).build().verify(request);
+		GeneralSecurityException e = assertThrows(GeneralSecurityException.class, () -> {
+			SignatureHeaderVerifier.builder().keyMap(new HashKeyMap()).build().verify(request);
 		});
-		assertEquals(e.getMessage(), "Unable to verify request '" + request.toString() + "'");
+		assertEquals(e.getMessage(), "Unable to verify message '" + request.toString() + "'");
 	}
 
 	protected static String toB64(byte[] arr) {
@@ -143,8 +143,8 @@ public class TestHttpMessageVerifier {
 	}
 
 	@Test
-	public void testSecretKey() throws GeneralSecurityException, HttpMessageSignatureVerificationException {
-		HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
+	public void testSecretKey() throws GeneralSecurityException {
+		SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 		HttpRequest request = messageFactory.createRequest("POST", URI.create("http://example.com/post/service?data=4"));
 		request.addHeader("Date", LocalDateTime.of(2016, 3, 20, 13, 20, 0).toInstant(ZoneOffset.ofHours(1)).toString());
 		request.addHeader("XXXX", "VVVV");

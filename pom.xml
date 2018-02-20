@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>tech.barbero.http-messages-signing</groupId>
 	<artifactId>http-messages-signing-parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>HTTP Messages Signing Parent</name>
 	<packaging>pom</packaging>
-	
+
 	<description>Implementation of the Internet-Draft "Signing HTTP Messages", draft-cavage-http-signatures-09, https://tools.ietf.org/html/draft-cavage-http-signatures-09</description>
 	<url>https://github.com/mbarbero/http-messages-signing</url>
 
@@ -75,6 +75,12 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.annotation</artifactId>
+				<version>6.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter-api</artifactId>
 				<version>${junit.jupiter.version}</version>
@@ -96,6 +102,10 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.annotation</artifactId>
+		</dependency>
 		<dependency> <!-- For Surefire test run -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -350,7 +360,7 @@
 									<resource>
 										<directory>${project.basedir}/..</directory>
 										<includes>
-											<include>LICENSE.adoc</include>
+											<include>LICENSE</include>
 											<include>NOTICE.adoc</include>
 										</includes>
 									</resource>

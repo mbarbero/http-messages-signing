@@ -33,41 +33,43 @@ class SigningStringBuilder {
 	}
 
 	private static String headerSigningString(HttpMessage message, String header) {
+		final String ret;
 		if (HttpMessageSigner.REQUEST_TARGET.equals(header)) {
-			if (message instanceof HttpRequest) {
-				return requestTargetHeaderSigningString((HttpRequest) message);
-			} else {
+			if (!(message instanceof HttpRequest)) {
 				throw new IllegalStateException("Header '" + HttpMessageSigner.REQUEST_TARGET + "' can only be used with HTTP Request.");
 			}
+			ret = requestTargetHeaderSigningString((HttpRequest) message);
 		} else if (HttpMessageSigner.RESPONSE_STATUS.equals(header)) {
-			if (message instanceof HttpResponse) {
-				return responseStatusHeaderSigningString((HttpResponse) message);
-			} else {
+			if (!(message instanceof HttpResponse)) {
 				throw new IllegalStateException("Header '" + HttpMessageSigner.RESPONSE_STATUS + "' can only be used with HTTP Response.");
 			}
+			ret = responseStatusHeaderSigningString((HttpResponse) message);
 		} else {
-			return headerSigningString(header, message.headerValues(header));
+			ret = headerSigningString(header, message.headerValues(header));
 		}
+		return ret;
 	}
 
 	private List<String> signingStringParts(HttpMessage message) {
 		checkHeaders(message);
-		if (headersToSign.isEmpty()) {
-			return Collections.singletonList(headerSigningString(HttpMessageSigner.HEADER_DATE, message.headerValues(HttpMessageSigner.HEADER_DATE)));
+		final List<String> ret;
+		if (this.headersToSign.isEmpty()) {
+			ret = Collections.singletonList(headerSigningString(HttpMessageSigner.HEADER_DATE, message.headerValues(HttpMessageSigner.HEADER_DATE)));
 		} else {
-			return headersToSign.stream()
+			ret = this.headersToSign.stream()
 					.map(h -> headerSigningString(message, h))
 					.collect(Collectors.toList());
 		}
+		return ret;
 	}
 
 	private void checkHeaders(HttpMessage message) {
-		if (headersToSign.isEmpty()) {
+		if (this.headersToSign.isEmpty()) {
 			if (message.headerValues(HttpMessageSigner.HEADER_DATE).isEmpty()) {
 				throw new IllegalStateException("A HTTP message must contain at least a date header to be signed");
 			}
 		} else {
-			List<String> notFound = headersToSign.stream()
+			List<String> notFound = this.headersToSign.stream()
 					.filter(h -> !HttpMessageSigner.REQUEST_TARGET.equals(h))
 					.filter(h -> !HttpMessageSigner.RESPONSE_STATUS.equals(h))
 					.filter(h -> message.headerValues(h).isEmpty())
@@ -93,8 +95,10 @@ class SigningStringBuilder {
 	 * Leading and trailing optional whitespace (OWS) in the header field value are omitted (as specified in RFC7230 [RFC7230], Section 3.2.4).
 	 *
 	 * @param header
+	 *          the name of the header.
 	 * @param value
-	 * @return
+	 *          the value of the header.
+	 * @return the header field string properly formatted.
 	 */
 	private static String headerSigningString(String header, String value) {
 		return header.toLowerCase().trim() + ": " + value.trim();
@@ -105,8 +109,10 @@ class SigningStringBuilder {
 	 * and an ASCII space `, `, and used in the order in which they will appear in the transmitted HTTP message.
 	 *
 	 * @param header
+	 *          the name of the header.
 	 * @param values
-	 * @return
+	 *          the values of the header.
+	 * @return the header field string properly formatted.
 	 */
 	private static String headerSigningString(String header, List<String> values) {
 		return header.toLowerCase().trim() + ": " + values.stream().map(String::trim).collect(Collectors.joining(", "));

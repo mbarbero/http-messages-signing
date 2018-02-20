@@ -18,23 +18,36 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.crypto.Mac;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * A utility class to add a Signature header to an {@link HttpMessage}.
+ * <p>
+ * This class is immutable and thread-safe. Once configured by its builder, it can be reused as many times as desired.
+ */
 @AutoValue
 public abstract class HttpMessageSigner {
 
+	/**
+	 * Special header name for requesting to sign the target of a request.
+	 */
 	public static final String REQUEST_TARGET = "(request-target)";
+
+	/**
+	 * Special header name for requesting to sign the status code of a response.
+	 */
 	public static final String RESPONSE_STATUS = "(response-status)";
 
+	/**
+	 * The string value of the {@code Signature} header.
+	 */
 	public static final String HEADER_SIGNATURE = "Signature";
 
 	static final String PARAM_KEY_ID = "keyId";
@@ -51,11 +64,17 @@ public abstract class HttpMessageSigner {
 		SecureRandom strongSecureRandom = null;
 		try {
 			strongSecureRandom = SecureRandom.getInstanceStrong();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (@SuppressWarnings("unused") NoSuchAlgorithmException e) {
+			// we handle the fact that secureRandom can be null.
 		}
-		secureRandom = Optional.ofNullable(strongSecureRandom);
+		this.secureRandom = Optional.ofNullable(strongSecureRandom);
 	}
 
+	/**
+	 * Returns a new builder of {@code HttpMessageSigner}.
+	 *
+	 * @return a new builder of {@code HttpMessageSigner}.
+	 */
 	public static HttpMessageSigner.Builder builder() {
 		return new AutoValue_HttpMessageSigner.Builder()
 				.headersToSign(new ArrayList<String>());
@@ -69,10 +88,23 @@ public abstract class HttpMessageSigner {
 
 	abstract Algorithm algorithm();
 
-	abstract Optional<Provider> provider();
+	abstract Optional<Provider> securityProvider();
 
 	abstract SigningStringBuilder signingStringBuilder();
 
+	/**
+	 * Sign (i.e. add a {@code Signature header} and returns the given HTTP message. It uses the algorithm, headers and key
+	 * as specified to the builder used to create this object.
+	 * <p>
+	 * This implementation modifies the given message. It returns it for convenience.
+	 *
+	 * @param message
+	 *          the HTTP message to be signed
+	 * @return the message given in parameter with a new {@code Signature} header.
+	 * @throws GeneralSecurityException
+	 *           when the requested cryptographic algorithm is not available in the environment, or if the key retrieved
+	 *           from the {@link KeyMap} is inappropriate for the requested cryptographic algorithm.
+	 */
 	public <M extends HttpMessage> M sign(M message) throws GeneralSecurityException {
 		String signingString = signingStringBuilder().signingString(message);
 		message.addHeader(HEADER_SIGNATURE, param(PARAM_KEY_ID, keyId()));
@@ -108,8 +140,8 @@ public abstract class HttpMessageSigner {
 
 	private byte[] signWithSecretKeyAlgorithm(byte[] input) throws NoSuchAlgorithmException, InvalidKeyException {
 		final Mac mac;
-		if (provider().isPresent()) {
-			mac = algorithm().createMac(provider().get());
+		if (securityProvider().isPresent()) {
+			mac = algorithm().createMac(securityProvider().get());
 		} else {
 			mac = algorithm().createMac();
 		}
@@ -120,14 +152,14 @@ public abstract class HttpMessageSigner {
 
 	private byte[] signWithPublicKeyAlgorithm(byte[] input) throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
 		final Signature signature;
-		if (provider().isPresent()) {
-			signature = algorithm().createSignature(provider().get());
+		if (securityProvider().isPresent()) {
+			signature = algorithm().createSignature(securityProvider().get());
 		} else {
 			signature = algorithm().createSignature();
 		}
 
-		if (secureRandom.isPresent()) {
-			signature.initSign(keyMap().getPrivateKey(keyId()), secureRandom.get());
+		if (this.secureRandom.isPresent()) {
+			signature.initSign(keyMap().getPrivateKey(keyId()), this.secureRandom.get());
 		} else {
 			signature.initSign(keyMap().getPrivateKey(keyId()));
 		}
@@ -136,17 +168,32 @@ public abstract class HttpMessageSigner {
 		return signature.sign();
 	}
 
+	/**
+	 * Cryptographic algorithms which can be used for signing an HTTP message.
+	 */
 	public enum Algorithm {
 		/* Public-key algorithm */
-		RSA_SHA1("rsa-sha1", "SHA1withRSA", Type.PUBLIC_KEY), RSA_SHA256("rsa-sha256", "SHA256withRSA", Type.PUBLIC_KEY), ECDSA_SHA256("ecdsa-sha256", "SHA256withECDSA",
-				Type.PUBLIC_KEY),
+		/**
+		 * RSA public key algorithm with SHA-1 digest algorithm.
+		 */
+		RSA_SHA1("rsa-sha1", "SHA1withRSA", Type.PUBLIC_KEY),
+		/**
+		 * RSA public key algorithm with SHA-256 digest algorithm.
+		 */
+		RSA_SHA256("rsa-sha256", "SHA256withRSA", Type.PUBLIC_KEY),
+		/**
+		 * ECDSA public key algorithm with SHA-256 digest algorithm.
+		 */
+		ECDSA_SHA256("ecdsa-sha256", "SHA256withECDSA", Type.PUBLIC_KEY),
 		/* Secret-key algorithm */
+		/**
+		 * Hmac secret key algorithm with SHA-256 hash function.
+		 */
 		HMAC_SHA256("hmac-sha256", "HmacSHA256", Type.SECRET_KEY);
 
-		private static final EnumSet<Algorithm> ALL_OF = EnumSet.allOf(Algorithm.class);
-
-		public enum Type {
-			PUBLIC_KEY, SECRET_KEY;
+		enum Type {
+			PUBLIC_KEY,
+			SECRET_KEY;
 		}
 
 		private final String algorithmName;
@@ -159,45 +206,73 @@ public abstract class HttpMessageSigner {
 			this.type = type;
 		}
 
-		public String algorithmName() {
-			return algorithmName;
+		String algorithmName() {
+			return this.algorithmName;
 		}
 
-		public Type type() {
-			return type;
+		Type type() {
+			return this.type;
 		}
 
-		public Signature createSignature() throws NoSuchAlgorithmException {
-			return Signature.getInstance(javaAlgorithmName);
+		Signature createSignature() throws NoSuchAlgorithmException {
+			return Signature.getInstance(this.javaAlgorithmName);
 		}
 
-		public Signature createSignature(Provider provider) throws NoSuchAlgorithmException {
-			return Signature.getInstance(javaAlgorithmName, provider);
+		Signature createSignature(Provider provider) throws NoSuchAlgorithmException {
+			return Signature.getInstance(this.javaAlgorithmName, provider);
 		}
 
-		public Mac createMac() throws NoSuchAlgorithmException {
-			return Mac.getInstance(javaAlgorithmName);
+		Mac createMac() throws NoSuchAlgorithmException {
+			return Mac.getInstance(this.javaAlgorithmName);
 		}
 
-		public Mac createMac(Provider provider) throws NoSuchAlgorithmException {
-			return Mac.getInstance(javaAlgorithmName, provider);
-		}
-
-		static Optional<Algorithm> findFirst(Predicate<Algorithm> p) {
-			return ALL_OF.stream().filter(p).findFirst();
+		Mac createMac(Provider provider) throws NoSuchAlgorithmException {
+			return Mac.getInstance(this.javaAlgorithmName, provider);
 		}
 	}
 
+	/**
+	 * A builder of {@code HttpMeesageSigner}.
+	 */
 	@AutoValue.Builder
 	public abstract static class Builder {
 
+		/**
+		 * The value of the keyId to be specified in the {@code Signature header}.
+		 *
+		 * @param keyId
+		 *          The value of the keyId to be specified in the {@code Signature header}.
+		 * @return this builder for daisy chain.
+		 */
 		public abstract Builder keyId(String keyId);
 
+		/**
+		 * The key map to be used to find the public/secret key associated with the {@code keyId}.
+		 *
+		 * @param keyMap
+		 *          The key map to be used to find the public/secret key associated with the {@code keyId}.
+		 *
+		 * @return this builder for daisy chain.
+		 */
 		public abstract Builder keyMap(KeyMap keyMap);
 
+		/**
+		 * The algorithm to be used to sign the HTTP messages.
+		 *
+		 * @param algorithm
+		 *          The algorithm to be used to sign the HTTP messages.
+		 * @return this builder for daisy chain.
+		 */
 		public abstract Builder algorithm(Algorithm algorithm);
 
-		public abstract Builder provider(Provider provider);
+		/**
+		 * The optional Java Security Provider to be used to find the implementation of the cryptographic algorithms.
+		 *
+		 * @param provider
+		 *          The Java Security Provider to be used to find the implementation of the cryptographic algorithms.
+		 * @return this builder for daisy chain.
+		 */
+		public abstract Builder securityProvider(Provider provider);
 
 		abstract Builder headersToSign(List<String> headers);
 
@@ -205,6 +280,14 @@ public abstract class HttpMessageSigner {
 
 		abstract Builder signingStringBuilder(SigningStringBuilder signingStringBuilder);
 
+		/**
+		 * Adds the given header to the list of header to take into account while creating the signature of the HTTP message.
+		 * Headers will be signed in the order they have been added to this builder.
+		 *
+		 * @param header
+		 *          The header name to be added to the list of headers to be signed.
+		 * @return this builder for daisy chain.
+		 */
 		public Builder addHeaderToSign(String header) {
 			if (!headersToSign().contains(header)) {
 				headersToSign().add(Objects.requireNonNull(header));
@@ -214,6 +297,11 @@ public abstract class HttpMessageSigner {
 
 		abstract HttpMessageSigner autoBuild();
 
+		/**
+		 * Returns a newly configured {@code HttpMessageSigner}.
+		 *
+		 * @return a newly configured {@code HttpMessageSigner}.
+		 */
 		public HttpMessageSigner build() {
 			signingStringBuilder(SigningStringBuilder.forHeaders(headersToSign()));
 			HttpMessageSigner ret = autoBuild();

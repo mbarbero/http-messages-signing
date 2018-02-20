@@ -26,8 +26,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import tech.barbero.http.message.signing.HashKeyMap;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerificationException;
-import tech.barbero.http.message.signing.HttpMessageSignatureVerifier;
+import tech.barbero.http.message.signing.SignatureHeaderVerifier;
 import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
 
@@ -59,11 +58,11 @@ public class TestOkHttp3RequestSignerInterceptor {
 
 			@Override
 			public Response proceed(Request request) throws IOException {
-				HttpMessageSignatureVerifier signatureVerifier = HttpMessageSignatureVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
+				SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 				try {
 					assertTrue(signatureVerifier.verify(OkHttp3RequestWrapper.from(request)));
 					pass.set(true);
-				} catch (HttpMessageSignatureVerificationException | GeneralSecurityException e) {
+				} catch (GeneralSecurityException e) {
 					fail(e);
 				}
 				return null;
@@ -74,43 +73,43 @@ public class TestOkHttp3RequestSignerInterceptor {
 				return null;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public Call call() {
 				return null;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public int connectTimeoutMillis() {
 				return 0;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public Chain withConnectTimeout(int timeout, TimeUnit unit) {
 				return null;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public int readTimeoutMillis() {
 				return 0;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public Chain withReadTimeout(int timeout, TimeUnit unit) {
 				return null;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public int writeTimeoutMillis() {
 				return 0;
 			}
 
-			//@Override source-incompatible change in OkHttp 3.9.0
+			// @Override source-incompatible change in OkHttp 3.9.0
 			@SuppressWarnings("unused")
 			public Chain withWriteTimeout(int timeout, TimeUnit unit) {
 				return null;

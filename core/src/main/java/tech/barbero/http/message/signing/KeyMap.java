@@ -8,16 +8,41 @@
  *******************************************************************************/
 package tech.barbero.http.message.signing;
 
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import javax.crypto.SecretKey;
 
+/**
+ * A {@link KeyStore} like interface.
+ */
 public interface KeyMap {
 
+	/**
+	 * Returns the public key associated with the given {@code keyId} or null if none.
+	 *
+	 * @param keyId
+	 *          the id of key to be returned.
+	 * @return the public key associated with the given {@code keyId} or null if none.
+	 */
 	PublicKey getPublicKey(String keyId);
 
+	/**
+	 * Returns the private key associated with the given {@code keyId} or null if none.
+	 *
+	 * @param keyId
+	 *          the id of key to be returned.
+	 * @return the private key associated with the given {@code keyId} or null if none.
+	 */
 	PrivateKey getPrivateKey(String keyId);
 
+	/**
+	 * Returns the secret key associated with the given {@code keyId} or null if none.
+	 *
+	 * @param keyId
+	 *          the id of key to be returned.
+	 * @return the secret key associated with the given {@code keyId} or null if none.
+	 */
 	SecretKey getSecretKey(String keyId);
 }

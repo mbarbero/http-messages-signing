@@ -6,18 +6,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
+/**
+ * Single package for HTTP message signing.
+ */
+@org.osgi.annotation.versioning.Version("1.0.0")
 package tech.barbero.http.message.signing;
-
-public class HttpMessageSignatureVerificationException extends Exception {
-
-	private static final long serialVersionUID = -661385921885321777L;
-
-	public HttpMessageSignatureVerificationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public HttpMessageSignatureVerificationException(String string) {
-		super(string);
-	}
-
-}
