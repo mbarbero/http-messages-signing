@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 /**
- * http-messages-signing bridge with Java Servlet API 3.x and 4.x.
+ * Java Servlet API 3.x and 4.x bridge.
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
 package tech.barbero.http.message.signing.servlet;

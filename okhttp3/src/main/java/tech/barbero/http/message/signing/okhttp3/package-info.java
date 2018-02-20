@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 /**
- * http-messages-signing bridge with OkHttp 3.x.
+ * OkHttp 3.x bridge.
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
 package tech.barbero.http.message.signing.okhttp3;

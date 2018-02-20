@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 /**
- * http-messages-signing bridge with Apache HttpCore 4.x.
+ * Apache HttpCore 4.x bridge.
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
 package tech.barbero.http.message.signing.ahc4;
