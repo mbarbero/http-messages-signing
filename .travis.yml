@@ -14,3 +14,14 @@ env:
 
 script:
 - ./releng/docker-run-ci.sh
+
+deploy:
+  provider: pages
+  local-dir: target/site/
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  committer-from-gh: true
+  keep-history: true
+  verbose: true
+  on:
+    branch: master
