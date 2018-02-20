@@ -8,6 +8,6 @@ IFS=$'\n\t'
 
 SCRIPT_WD=$(dirname "$(readlink -f "$0")")
 
-# Build docker image which will be used as the build environment later
+echo "${DOCKERHUB_PASSWORD}" | docker login --password-stdin --username "${DOCKERHUB_USERNAME}"
 POM_VERSION=$(cat ${SCRIPT_WD}/../pom.xml | grep "<version>" | sed '2,$d' | sed -E 's#.*<version>(.*)</version>#\1#')
-docker build --tag mbarbero/http-messages-signing:${POM_VERSION} releng/env
+docker push mbarbero/http-messages-signing:${POM_VERSION}

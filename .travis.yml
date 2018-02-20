@@ -5,23 +5,30 @@ services:
 # Skipping the Installation Step
 install: true
 
+cache:
+  directories:
+  - $HOME/.m2
+
 env:
-  global:
-  - secure: H2j7PkVxiWviRZVHp/r3BQtIFahcqTXo8z42/LIxvkiTzx/ua2GPQFADOIUuGwi551ASDJox8RXxoIWfYxCRzKbkzEu5VogCV296CFFLSJ0pLstcoO61C2GnAE46PLl4i5OpvV5WAzC7KjwIDCyCcK6nXLfO3WtHEPTG1XUqLyRxHH+nhgU2NvteChnyqBPCqAnEjAduXLaE/4848lsBtAXebI+fzQR+PrW1LefXGiuKTghJNG/q0ulrrFnjLkhAu4MqSWGXOW1FA9GazgSiTScGmWthG8ujwNRuii9tacXOZ1vqi9ycnoKpGML5sHl5Uoid5PU2fOUjHZbZAqlgPnoMbyYVr4g5SZIDqys69Ut5FbH8NhNtTlbnwnYMjV3CPKTl2QLyS3PsPV/hX8kNHMtaLlfzIBNJv65B/+QD6L6mC0HM9+d8DeHGGXd0QJXTmMOooQrKO0ehdJaIw+T43P4VRImykMFtA/YPxtl/eziETkxPi85/JXua9V3NiZKu5srtJ3Y3woqwr5lcCQU+AjRAm4g3v3IYZf2ucktQvNY01nwRUFKYuX8y1WQb8uQ9r12KzVifxjaUXV99lywrYSrW19MgD1s9PCXHqqNW1Q11nlHpMw0RukKiPkfjM9zZ4dVYVfn9uMXneUen1+SlNuETPHjBpqREVQKoKWp3q98=
-  - secure: Az1YsCQhlUrb2FMMb+UWG/kxmpDIMF6WYi7QN/4BX3hAJxs9GFEs9sCy0l4uNm4jwfx0Su5WQz3PHNT/0Ji7K3O1TaCHBrIPNEn9tRJStwvbmZtBk1ZSzWbrtrFh/WhVL4PrYq5QcrwdDe1PS7xRN9CexXFs+qkVAtq3EDSdm6NbhryvhiGn9RVQFRLp+IjaMEQ24z98K/i9Mjt7Yjq47FoBd3vdGSVM8yLchpcBwptOUeNaI02t/1YBXE+4WyU4NgptYtCNv5gcnr6PUl+6Go1oD9Kgwee1zEX48CpFN2hbV57PDoiEkeaRFOJs2JDa1laP9UlnYnr9BuqWhyCjn5R3d7eb/OsiXv8tadwtoxr+wNSS+mq1Unol8BM85HhVGx1YEkJ6S3yvsH74eBzDF414ykGlL3u4xuCujsGhcNvlswjqhHnD2tQ2AMsoTMCFlzCwbAmCebHetWS901dGKWZkJN9VJduK0zS+rd9AF+lFLgOY3OE0ManPyMu6xGJNIHB6Gw1O+vaq5q78SJyL9TVACCC7nZRfKdCp1SUaSITliml4OGKVOsh/Up9z98fyPAYJPzv53Ha5/slqmhjhYeweutmIyQB2ph6qNgKjU/xHUOHmHYNTUvZxNI53hh8sGJsaP/VLJWJIx4cUQ/L4mdP7iakMfVxQ+7jzONzYd7A=
-  - secure: k0BxpfaLyk3+NI0PI3lWBgSHbTpTxjmlb8zHCQwU+NM6D+UCHCyRwhpAQry4lwcCbjsjF4mYP4Zf8CCbEGZLeHegGuWiJky4KmyJr3rFmLcnq0sZqS8ZVnnm5A/dAX6brpzczakgfwGhqAvrsLCgZ8suciuscd+PFtwkChLY3S5C+EOq4imR12tlhbf1J1wwtKp3JAQ8iYKF6Gs435EAGfPYi3hqnkYejfyB0MFObepjGfztzjodRc1TOPFuRJlrjg3RT7JpHKGivoAkxTE4cVzEpYDQuqMijeu5yfL3eMwZ4nIT0m8TRewWvbG1dcc/vyOkhHR3t2rboV9woYTSngkD/SXDCm8VwkqloZmwe5jnsdsdRxdiOGqaZ9DriKC66+SPtBfXrk6EUuq5Pg9zQM+ycTltukrtcxyTmF14w3JV+wXbD+8gFKkZz+/oTKYwIu47TUZOjb6xXtTq7KuvS0OrJVnreYkFRH+humf4RTCl2hwPymmpjf+TpHP9qicTDfWCP7aYqpqKNyFvfOfEO3X5GsKm1RfVKdhh5ypZd5yXbqBIK1qwG/eSR3fCQNVm/O5QDzOrLUfb8W/luRlMt6Cb5m/tiMVKalUn1wjy9NXzWO3TSw3Uyrimcoa5+JcY/aCRb2MUti7oY9D3KiAwyhUw5+ZivWqS1TN4Iw2hZZM=
-  - secure: m4r2Hf7rmRz+z8K5aV8LXhyLae7axugcr3Z+FCFqtBDilz1wwhKGsVDteh0KLK955AvIaersRqLUl8yRyi8xnJ43Gy14eq/wdx85M5wS1y1+p5n03CfpY3vRAs8JT+4yrLynTcw85LmEYubykloigQUycSXxsDJmhzpOfiKE9KwwzQNGeMvNKDH3D4JGaSOVvY5FRfpOQMsF7gbJTaKnAaqH6pzD6NJ3n/7ilOZndEwzVQKKGPwTlC5muR16FjpXQU6LSgyg6fwPDszfL0zyBM0TLlBr/vnU4h6oYttcRlccVIZCk70xGovmKKj/k7JtX7fASd5cuvI1gxhdSuriG3F8j3SVgo0xyueVXr/Rgj0HudDIPkrou9yUKpnpfGNQfrX2LUS4Q/gqsopXkWXN/9VH0RQ953iCe+8xWIhLsEf6zt+GjC7IBfsxMshk5w+qMWU5LYqvPL05pOgObERgWyB+E8kaDfrA7M5sUozNZlCUxlgmPXa8wBWztVBIi0S0Iz64F7uvkUIPSfm30EXGHc1dgIfBB7EVldFuKFI8AWPCMcEnx+G08pupoe5MRB3q9SZDbp12oPhJYI439yTC74iWaWU/iRJUFwXQ/Z+Sdg1Mk62O35pDtIJcPBqQr0ArHi9B6I2O72dKX/ug7xTDH3ciKf9pPlBfpGqz/pL/VTw=
+  - SRC_MOUNTPOINT=/src
 
 script:
-- ./releng/docker-run-ci.sh
+  - ./releng/docker-build.sh
+  - ./releng/docker-run.sh "releng/ci.sh"
 
 deploy:
-  provider: pages
-  local-dir: target/site/
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  committer-from-gh: true
-  keep-history: true
-  verbose: true
-  on:
-    branch: master
+  - provider: script
+    script: 
+      - ./releng/docker-deploy.sh
+      - ./releng/docker-run.sh "releng/deploy.sh"
+    on:
+      branch: master
+  - provider: pages
+    local-dir: target/site/
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    committer-from-gh: true
+    keep-history: true
+    verbose: true
+    on:
+      branch: master
