@@ -30,6 +30,19 @@
 		</license>
 	</licenses>
 
+	<developers>
+		<developer>
+			<id>mbarbero</id>
+			<name>Mikaël Barbero</name>
+			<email>mikael.barbero@gmail.com</email>
+			<roles>
+				<role>owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<modules>
 		<module>core</module>
 		<module>servlet</module>
