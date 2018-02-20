@@ -25,7 +25,7 @@ deploy:
       branch: master
   - provider: pages
     local-dir: target/site/
-    skip-cleanup: true
+    skip_cleanup: true
     github-token: $GITHUB_TOKEN
     committer-from-gh: true
     keep-history: true
