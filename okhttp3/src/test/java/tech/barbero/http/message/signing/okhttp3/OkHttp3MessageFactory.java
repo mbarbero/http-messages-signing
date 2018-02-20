@@ -28,7 +28,7 @@ public class OkHttp3MessageFactory implements MessageFactory {
 		} else {
 			builder.method(method.toUpperCase(), null);
 		}
-		return OkHttp3RequestWrapper.from(builder.build());
+		return RequestWrapper.from(builder.build());
 	}
 
 	@Override

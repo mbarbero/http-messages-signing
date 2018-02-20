@@ -20,9 +20,8 @@ import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
 
 /**
- * RequestSignature interceptor is responsible for adding <code>Signature</code>
- * header to the outgoing requests. The content of the signature is defined by
- * the injected {@link HttpMessageSigner} object.
+ * RequestSignature interceptor is responsible for adding <code>Signature</code> header to the outgoing requests. The
+ * content of the signature is defined by the injected {@link HttpMessageSigner} object.
  *
  * @since 1.0
  */
@@ -34,7 +33,7 @@ public final class RequestSignature implements HttpRequestInterceptor {
 	 * Creates a new signing request interceptor.
 	 *
 	 * @param messageSigner
-	 *            the message signer to be used to create the signature header.
+	 *          the message signer to be used to create the signature header.
 	 */
 	public RequestSignature(HttpMessageSigner messageSigner) {
 		this.messageSigner = messageSigner;
@@ -43,7 +42,7 @@ public final class RequestSignature implements HttpRequestInterceptor {
 	@Override
 	public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
 		try {
-			messageSigner.sign(new Request(request));
+			this.messageSigner.sign(new Request(request));
 		} catch (GeneralSecurityException e) {
 			throw new HttpException("Can't sign HTTP request '" + request + "'", e);
 		}

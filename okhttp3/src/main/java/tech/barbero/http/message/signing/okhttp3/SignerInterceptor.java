@@ -16,19 +16,19 @@ import okhttp3.Interceptor;
 import okhttp3.Response;
 import tech.barbero.http.message.signing.HttpMessageSigner;
 
-public class OkHttp3RequestSignerInterceptor implements Interceptor {
+public class SignerInterceptor implements Interceptor {
 
 	private final HttpMessageSigner messageSigner;
 
-	public OkHttp3RequestSignerInterceptor(HttpMessageSigner messageSigner) {
+	public SignerInterceptor(HttpMessageSigner messageSigner) {
 		this.messageSigner = Objects.requireNonNull(messageSigner);
 	}
 
 	@Override
 	public Response intercept(Chain chain) throws IOException {
-		OkHttp3RequestWrapper request = OkHttp3RequestWrapper.from(chain.request());
+		RequestWrapper request = RequestWrapper.from(chain.request());
 		try {
-			messageSigner.sign(request);
+			this.messageSigner.sign(request);
 			return chain.proceed(request.delegate());
 		} catch (GeneralSecurityException e) {
 			throw new RuntimeException("Can't sign HTTP message '" + chain.request() + "'", e);

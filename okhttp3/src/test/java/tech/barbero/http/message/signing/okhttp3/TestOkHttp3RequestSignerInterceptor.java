@@ -48,7 +48,7 @@ public class TestOkHttp3RequestSignerInterceptor {
 				.addHeader("Content-Length", "18")
 				.addHeader("digest", "ab4509qsdhabf236G3==")
 				.build();
-		OkHttp3RequestSignerInterceptor interceptor = new OkHttp3RequestSignerInterceptor(httpSignature);
+		SignerInterceptor interceptor = new SignerInterceptor(httpSignature);
 		AtomicBoolean pass = new AtomicBoolean(false);
 		interceptor.intercept(new Chain() {
 			@Override
@@ -60,7 +60,7 @@ public class TestOkHttp3RequestSignerInterceptor {
 			public Response proceed(Request request) throws IOException {
 				SignatureHeaderVerifier signatureVerifier = SignatureHeaderVerifier.builder().keyMap(HashKeyMap.INSTANCE).build();
 				try {
-					assertTrue(signatureVerifier.verify(OkHttp3RequestWrapper.from(request)));
+					assertTrue(signatureVerifier.verify(RequestWrapper.from(request)));
 					pass.set(true);
 				} catch (GeneralSecurityException e) {
 					fail(e);

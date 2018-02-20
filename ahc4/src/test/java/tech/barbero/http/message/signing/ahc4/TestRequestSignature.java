@@ -33,9 +33,9 @@ import org.apache.http.protocol.RequestContent;
 import org.junit.jupiter.api.Test;
 
 import tech.barbero.http.message.signing.HashKeyMap;
-import tech.barbero.http.message.signing.SignatureHeaderVerifier;
 import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.HttpMessageSigner.Algorithm;
+import tech.barbero.http.message.signing.SignatureHeaderVerifier;
 import tech.barbero.http.message.signing.ahc4.MessageWrapper.Request;
 
 public class TestRequestSignature {

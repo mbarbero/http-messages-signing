@@ -20,9 +20,8 @@ import tech.barbero.http.message.signing.HttpMessageSigner;
 import tech.barbero.http.message.signing.ahc4.MessageWrapper.Response;
 
 /**
- * ResponseSignature is responsible for adding <code>Signature</code> header to
- * the outgoing responses. The content of the signature is defined by the
- * injected {@link HttpMessageSigner} object.
+ * ResponseSignature is responsible for adding <code>Signature</code> header to the outgoing responses. The content of
+ * the signature is defined by the injected {@link HttpMessageSigner} object.
  *
  * @since 1.0
  */
@@ -34,7 +33,7 @@ public final class ResponseSignature implements HttpResponseInterceptor {
 	 * Creates a new signing response interceptor.
 	 *
 	 * @param messageSigner
-	 *            the message signer to be used to create the signature header.
+	 *          the message signer to be used to create the signature header.
 	 */
 	public ResponseSignature(HttpMessageSigner messageSigner) {
 		this.messageSigner = messageSigner;
@@ -43,7 +42,7 @@ public final class ResponseSignature implements HttpResponseInterceptor {
 	@Override
 	public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
 		try {
-			messageSigner.sign(new Response(response));
+			this.messageSigner.sign(new Response(response));
 		} catch (GeneralSecurityException e) {
 			throw new HttpException("Can't sign HTTP response '" + response + "'", e);
 		}

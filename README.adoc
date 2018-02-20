@@ -11,6 +11,54 @@ Java Implementation of the IETF draft for https://tools.ietf.org/html/draft-cava
 * http://square.github.io/okhttp/[OkHttp 3.x]
 * https://javaee.github.io/servlet-spec/[Java Servlet 3.x and 4.x]
 
+== Recipes
+
+=== Create a HTTP messages signer
+
+[source,java]
+----
+HttpMessageSigner signer = HttpMessageSigner.builder()
+		.algorithm(Algorithm.RSA_SHA256)
+		.keyMap(keyMap)
+		.addHeaderToSign(HttpMessageSigner.REQUEST_TARGET)
+		.addHeaderToSign("Date")
+		.addHeaderToSign("Content-Length")
+		.addHeaderToSign("Digest")
+		.keyId("myKeyId")
+		.build();
+----
+
+=== Signing an Apache HttpCore request 
+
+[source,java]
+----
+HttpClientBuilder builder = HttpClientBuilder.create();
+builder.addLast(new RequestSignature(signer));
+try (CloseableHttpClient client = builder.build()) {
+	HttpGet httpget = new HttpGet(uri);
+	try (CloseableHttpResponse response = httpclient.execute(httpget)) {
+		...
+	}
+}
+----
+
+=== Signing an OkHttp request
+
+[source,java]
+----
+OkHttpClient client = new OkHttpClient.Builder()
+		.addInterceptor(new SignerInterceptor(signer))
+		.build();
+
+Request request = new Request.Builder()
+		.url(url)
+		.build();
+
+try (Response response = client.newCall(request).execute()) {
+	...
+}
+----
+
 == Requirements
 
 Java 8
@@ -21,6 +69,10 @@ Java 8
 ----
 $ mvn clean install
 ----
+
+== Documentation 
+
+Javadoc can be be found at https://mbarbero.github.io/http-messages-signing/apidocs/1.0.0-SNAPSHOT/
 
 == About
 

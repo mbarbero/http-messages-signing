@@ -15,40 +15,40 @@ import java.util.Objects;
 import okhttp3.Request;
 import tech.barbero.http.message.signing.HttpRequest;
 
-class OkHttp3RequestWrapper implements HttpRequest {
+class RequestWrapper implements HttpRequest {
 
 	private Request delegate;
 
-	private OkHttp3RequestWrapper(Request delegate) {
+	private RequestWrapper(Request delegate) {
 		this.delegate = delegate;
 	}
 
-	static OkHttp3RequestWrapper from(Request request) {
-		return new OkHttp3RequestWrapper(Objects.requireNonNull(request));
+	static RequestWrapper from(Request request) {
+		return new RequestWrapper(Objects.requireNonNull(request));
 	}
 
 	Request delegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	@Override
 	public List<String> headerValues(String name) {
-		return delegate.headers(name);
+		return this.delegate.headers(name);
 	}
 
 	@Override
 	public void addHeader(String name, String value) {
-		delegate = delegate.newBuilder().addHeader(name, value).build();
+		this.delegate = this.delegate.newBuilder().addHeader(name, value).build();
 	}
 
 	@Override
 	public String method() {
-		return delegate.method();
+		return this.delegate.method();
 	}
 
 	@Override
 	public URI uri() {
-		return delegate.url().uri();
+		return this.delegate.url().uri();
 	}
 
 }
