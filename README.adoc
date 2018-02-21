@@ -2,14 +2,98 @@
 
 image:https://travis-ci.org/mbarbero/http-messages-signing.svg?branch=master["Build Status", link="https://travis-ci.org/mbarbero/http-messages-signing"]
 image:https://img.shields.io/badge/license-EPL--2.0-blue.svg["License", link="https://opensource.org/licenses/EPL-2.0"]
-image:https://img.shields.io/maven-central/v/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Maven Central]
-image:https://img.shields.io/nexus/s/https/oss.sonatype.org/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Sonatype OSSRH (Snapshots)]
+image:https://img.shields.io/maven-central/v/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Maven Central, link="https://repo1.maven.org/maven2/tech/barbero/http-messages-signing/"]
+image:https://img.shields.io/nexus/s/https/oss.sonatype.org/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Sonatype OSSRH (Snapshots), link="https://oss.sonatype.org/content/repositories/snapshots/tech/barbero/http-messages-signing/"]
 
 Java Implementation of the IETF draft for https://tools.ietf.org/html/draft-cavage-http-signatures-09[HTTP Message Signing]. It provides bridges with the following libraries:
 
 * https://hc.apache.org[Apache HTTP Components 4.x]
 * http://square.github.io/okhttp/[OkHttp 3.x]
 * https://javaee.github.io/servlet-spec/[Java Servlet 3.x and 4.x]
+
+== Latest release
+
+The most recent release is http-messages-signing 1.0.0, released 2018-02-20 and available on Maven central. https://mbarbero.github.io/http-messages-signing/apidocs/1.0.0/[Javadoc is available].
+
+To add a dependency on http-messages-signing using Maven, use the following:
+
+[source,xml]
+----
+<dependency>
+  <groupId>tech.barbero.http-messages-signing</groupId>
+  <artifactId>http-messages-signing-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+To add a dependency using Gradle:
+
+[source,gradle]
+----
+dependencies {
+  compile 'tech.barbero.http-messages-signing:http-messages-signing:1.0.0'
+}
+----
+
+And one of the bridge if required.
+
+=== Apache HTTP Component 4.x
+
+[source,xml]
+----
+<dependency>
+  <groupId>tech.barbero.http-messages-signing</groupId>
+  <artifactId>http-messages-signing-ahc4</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+[source,gradle]
+----
+dependencies {
+  compile 'tech.barbero.http-messages-signing:http-messages-signing-ahc4:1.0.0'
+}
+----
+
+=== OkHttp 3.x
+
+[source,xml]
+----
+<dependency>
+  <groupId>tech.barbero.http-messages-signing</groupId>
+  <artifactId>http-messages-signing-okhttp3</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+[source,gradle]
+----
+dependencies {
+  compile 'tech.barbero.http-messages-signing:http-messages-signing-okhttp3:1.0.0'
+}
+----
+
+=== Servlet 3.x, 4.x
+
+[source,xml]
+----
+<dependency>
+  <groupId>tech.barbero.http-messages-signing</groupId>
+  <artifactId>http-messages-signing-servlet</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+[source,gradle]
+----
+dependencies {
+  compile 'tech.barbero.http-messages-signing:http-messages-signing-servlet:1.0.0'
+}
+----
+
+== Snapshots
+
+Snapshots of http-messages-signing built from the master branch are available on https://oss.sonatype.org/content/repositories/snapshots[Sonatype Snapshot Repository]. https://mbarbero.github.io/http-messages-signing/apidocs/1.0.1-SNAPSHOT/[Javadoc is available].
 
 == Recipes
 
@@ -69,10 +153,6 @@ Java 8
 ----
 $ mvn clean install
 ----
-
-== Documentation 
-
-Javadoc can be be found at https://mbarbero.github.io/http-messages-signing/apidocs/1.0.0-SNAPSHOT/
 
 == About
 
