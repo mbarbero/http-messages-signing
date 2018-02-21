@@ -9,24 +9,13 @@ cache:
   directories:
   - $HOME/.m2
 
-env:
-  - SRC_MOUNTPOINT=/src
-
 script:
   - ./releng/docker-build.sh
   - ./releng/docker-run.sh "releng/build.sh"
 
 deploy:
   - provider: script
-    script: ./releng/docker-deploy.sh && ./releng/docker-run.sh "releng/deploy.sh"
+    script: ./releng/docker-deploy.sh && ./releng/docker-run.sh "releng/deploy.sh" && ./releng/deploy-gh-pages.sh
     skip_cleanup: true
-    on:
-      branch: master
-  - provider: pages
-    local-dir: target/site/
-    skip_cleanup: true
-    github-token: $GITHUB_TOKEN
-    committer-from-gh: true
-    keep-history: true
     on:
       branch: master

@@ -22,3 +22,7 @@ export SONATYPE_USERNAME="$(pass ossrh/username)"
 export SONATYPE_PASSWORD="$(pass ossrh/password)"
 
 . "${SCRIPT_WD}/docker-run.sh" "releng/deploy.sh"
+
+export GITHUB_TOKEN="$(pass github/token)"
+
+. "${SCRIPT_WD}/deploy-gh-pages.sh"
