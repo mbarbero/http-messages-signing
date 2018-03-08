@@ -12,8 +12,18 @@ MAVEN_REPO=${MAVEN_REPO:-${HOME}/.m2/repository}
 
 mvn -e -C -U -V -B \
 	-Dmaven.repo.local=${MAVEN_REPO} \
-	clean verify -Pcompile -f "${SCRIPT_WD}/../pom.xml"
+	clean verify -Pcompile \
+	-f "${SCRIPT_WD}/../pom.xml"
 
 mvn -e -C -U -V -B \
 	-Dmaven.repo.local=${MAVEN_REPO} \
-	clean verify -Pprepare-deploy -f "${SCRIPT_WD}/../pom.xml"
+	-Dsonar.host.url=https://sonarcloud.io \
+	-Dsonar.organization="${SONAR_ORG}" \
+	-Dsonar.login="${SONAR_TOKEN}" \
+	clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar \
+	-f "${SCRIPT_WD}/../pom.xml"
+
+mvn -e -C -U -V -B \
+	-Dmaven.repo.local=${MAVEN_REPO} \
+	clean verify -Pprepare-deploy \
+	-f "${SCRIPT_WD}/../pom.xml"

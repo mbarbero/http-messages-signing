@@ -4,6 +4,7 @@ image:https://travis-ci.org/mbarbero/http-messages-signing.svg?branch=master["Bu
 image:https://img.shields.io/badge/license-EPL--2.0-blue.svg["License", link="https://opensource.org/licenses/EPL-2.0"]
 image:https://img.shields.io/maven-central/v/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Maven Central, link="https://repo1.maven.org/maven2/tech/barbero/http-messages-signing/"]
 image:https://img.shields.io/nexus/s/https/oss.sonatype.org/tech.barbero.http-messages-signing/http-messages-signing-core.svg[Sonatype OSSRH (Snapshots), link="https://oss.sonatype.org/content/repositories/snapshots/tech/barbero/http-messages-signing/"]
+image:https://sonarcloud.io/api/project_badges/measure?project=tech.barbero.http-messages-signing%3Ahttp-messages-signing-parent&metric=alert_status[SonarQube Analysis, link="https://sonarcloud.io/dashboard?id=tech.barbero.http-messages-signing%3Ahttp-messages-signing-parent"]
 
 Java Implementation of the IETF draft for https://tools.ietf.org/html/draft-cavage-http-signatures-09[HTTP Message Signing]. It provides bridges with the following libraries:
 
