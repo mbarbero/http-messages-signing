@@ -43,7 +43,7 @@ abstract class SignatureHeaderElements {
 
 	public static SignatureHeaderElements fromHeaderValuesList(List<String> headers) {
 		Builder builder = SignatureHeaderElements.builder();
-		headers.forEach(header -> builder.parse(header));
+		headers.forEach(builder::parse);
 		return builder.build();
 	}
 

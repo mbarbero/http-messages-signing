@@ -306,11 +306,11 @@ public abstract class HttpMessageSigner {
 			signingStringBuilder(SigningStringBuilder.forHeaders(headersToSign()));
 			HttpMessageSigner ret = autoBuild();
 			if (!headersToSign().isEmpty()) {
-				if (headersToSign().stream().noneMatch(h -> HEADER_DATE.equalsIgnoreCase(h))) {
+				if (headersToSign().stream().noneMatch(HEADER_DATE::equalsIgnoreCase)) {
 					throw new IllegalStateException("HttpMessageSigner should be configured to sign the '" + HEADER_DATE + "' header");
 				}
 
-				if (headersToSign().stream().noneMatch(h -> REQUEST_TARGET.equalsIgnoreCase(h))) {
+				if (headersToSign().stream().noneMatch(REQUEST_TARGET::equalsIgnoreCase)) {
 					throw new IllegalStateException("HttpMessageSigner should be configured to sign the '" + REQUEST_TARGET + "' header");
 				}
 			}

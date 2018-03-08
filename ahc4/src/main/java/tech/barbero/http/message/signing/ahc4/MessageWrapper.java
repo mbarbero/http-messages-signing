@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.http.Header;
+
 import tech.barbero.http.message.signing.HttpMessage;
 import tech.barbero.http.message.signing.HttpRequest;
 import tech.barbero.http.message.signing.HttpResponse;
@@ -38,7 +40,7 @@ abstract class MessageWrapper<M extends org.apache.http.HttpMessage> implements 
 			throw new IllegalArgumentException("Argument 'name' must not be null of empty");
 		}
 		return Arrays.stream(delegate().getHeaders(name))
-			.map(h -> h.getValue())
+			.map(Header::getValue)
 			.collect(Collectors.toList());
 	}
 
